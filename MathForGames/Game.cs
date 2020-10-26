@@ -10,6 +10,7 @@ namespace MathForGames
 {
     class Game
     {
+        public static Random rand;
         private static bool _gameOver = false;
         private static Scene[] _scenes;
         private static int _currentSceneIndex;
@@ -20,7 +21,7 @@ namespace MathForGames
                 return _currentSceneIndex;
             }
         }
-
+        public static int SceneLength { get { return _scenes.Length; } }
         public static ConsoleColor DefaultColor { get; set; } = ConsoleColor.White;
 
         /// <summary>
@@ -192,22 +193,22 @@ namespace MathForGames
             Scene scene2 = new Scene();
 
             //Create the actors to add to our scene
-            Enemy enemyHigh = new Enemy(0, 5, Color.GREEN, new Vector2(0,5), new Vector2(30, 5), '■', ConsoleColor.Green);
+            Enemy enemyHigh = new Enemy(1, 5, Color.GREEN, new Vector2(0,5), new Vector2(30, 5), '■', ConsoleColor.Green);
             Enemy enemyMid = new Enemy(10, 10, Color.GREEN, new Vector2(0, 10), new Vector2(30, 10), '■', ConsoleColor.Green);
-            Enemy enemyLow = new Enemy(3, 20, Color.GREEN, new Vector2(0, 20), new Vector2(30, 20), '■', ConsoleColor.Green);
-            Player player = new Player(0, 1,Color.BLUE, '@', ConsoleColor.Red);
-            Goal goal = new Goal(30, 20,Color.GREEN, player, 'G', ConsoleColor.Green);
+            Enemy enemyLow = new Enemy(25, 20, Color.GREEN, new Vector2(0, 20), new Vector2(30, 20), '■', ConsoleColor.Green);
+            Player player = new Player(1, 1,Color.BLUE, '@', ConsoleColor.Red);
+            Goal goal = new Goal(30, 21,Color.GREEN, player, 'G', ConsoleColor.Green);
 
             //Initialize the enmies starting values
-            enemyHigh.Speed = 2.5f;
-            enemyMid.Speed = 2;
-            enemyLow.Speed = 1.5f;
+            enemyHigh.Speed = 5;
+            enemyMid.Speed = 5;
+            enemyLow.Speed = 5;
             enemyHigh.Target = player;
             enemyMid.Target = player;
             enemyLow.Target = player;
 
             //Set player's starting speed
-            player.Speed = 1;
+            player.Speed = 5;
 
             //Add actors to the scenes
             scene1.AddActor(player);
@@ -216,6 +217,9 @@ namespace MathForGames
             scene1.AddActor(enemyLow);
             scene1.AddActor(goal);
             scene2.AddActor(player);
+            scene2.AddActor(enemyHigh);
+            scene2.AddActor(enemyMid);
+            scene2.AddActor(enemyLow);
             scene2.AddActor(goal);
             
             //Sets the starting scene index and adds the scenes to the scenes array
@@ -226,8 +230,6 @@ namespace MathForGames
             //Sets the current scene to be the starting scene index
             SetCurrentScene(startingSceneIndex);
         }
-
-
 
         /// <summary>
         /// Called every frame
@@ -280,7 +282,6 @@ namespace MathForGames
                 //Clear the input stream for the console window
                 while (Console.KeyAvailable)
                     Console.ReadKey(true);
-
             }
             End();
             

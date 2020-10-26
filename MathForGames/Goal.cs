@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using MathLibrary;
 using Raylib_cs;
-using MathLibrary;
+using System;
 
 namespace MathForGames
 {
@@ -48,9 +46,15 @@ namespace MathForGames
         {
             //If the player is in range of the goal, end the game
             if (CheckPlayerDistance())
+            {
+                if(Game.CurrentSceneIndex == Game.SceneLength - 1)
+                {
+                    Game.SetGameOver(true);
+                }
                 Game.SetCurrentScene(Game.CurrentSceneIndex + 1);
-            
-
+                _player.Position = new Vector2(1, 1);
+                Position = new Vector2(Game.rand.Next(0,30), Game.rand.Next(0, 30));
+            }
             base.Update(deltaTime);
         }
     }
