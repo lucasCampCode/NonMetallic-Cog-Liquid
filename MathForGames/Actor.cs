@@ -57,7 +57,7 @@ namespace MathForGames
         /// <param name="y">Position on the y axis</param>
         /// <param name="icon">The symbol that will appear when drawn</param>
         /// <param name="color">The color of the symbol that will appear when drawn</param>
-        public Actor(char icon = ' ', float y, float x, ConsoleColor color = ConsoleColor.White)
+        public Actor( float x, float y,char icon = ' ', ConsoleColor color = ConsoleColor.White)
         {
             _rayColor = Color.WHITE;
             _icon = icon;

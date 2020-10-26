@@ -101,7 +101,7 @@ namespace MathForGames
         {
             //Checks if the target has a value before continuing
             if (Target == null)
-                return true;
+                return false;
 
             //Find the vector representing the distance between the actor and its target
             Vector2 direction = Position - Target.Position;
@@ -142,7 +142,7 @@ namespace MathForGames
         {
             //If the target can be seen change the color to red and reset the player's position
             //If the target can't be seen change the color to blue
-            if(CheckTargetInSight(1.5f, 5))
+            if(CheckTargetInSight(0.5f, 5))
             {
                 _rayColor = Color.RED;
                 Target.Position = new Vector2();

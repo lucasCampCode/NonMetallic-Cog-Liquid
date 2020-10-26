@@ -48,7 +48,8 @@ namespace MathForGames
         {
             //If the player is in range of the goal, end the game
             if (CheckPlayerDistance())
-                Game.SetGameOver(true);
+                Game.SetCurrentScene(Game.CurrentSceneIndex + 1);
+            
 
             base.Update(deltaTime);
         }
