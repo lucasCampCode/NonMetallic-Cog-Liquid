@@ -76,37 +76,34 @@ namespace MathLibrary
         /// <summary>
         /// Returns the dot product of the two vectors given.
         /// </summary>
-        /// <param name="lhs"></param>
-        /// <param name="rhs"></param>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
         /// <returns></returns>
-        public static float DotProduct(Vector2 lhs, Vector2 rhs)
+        public static float DotProduct(Vector2 left, Vector2 right)
         {
 
-            return (lhs.X * rhs.X) + (lhs.Y * rhs.Y);
+            return (left.X * right.X) + (left.Y * right.Y);
         }
 
-        public static Vector2 operator +(Vector2 lhs, Vector2 rhs)
+        public static Vector2 operator +(Vector2 left, Vector2 right)
         {
-            return new Vector2(lhs.X + rhs.X, lhs.Y + rhs.Y);
+            return new Vector2(left.X + right.X, left.Y + right.Y);
         }
 
-        public static Vector2 operator -(Vector2 lhs, Vector2 rhs)
+        public static Vector2 operator -(Vector2 left, Vector2 right)
         {
-            return new Vector2(lhs.X - rhs.X, lhs.Y - rhs.Y);
+            return new Vector2(left.X - right.X, left.Y - right.Y);
         }
 
-        public static Vector2 operator *(Vector2 lhs, float scalar)
+        public static Vector2 operator *(Vector2 left, float scalar)
         {
 
-            return new Vector2(lhs.X * scalar, lhs.Y * scalar);
+            return new Vector2(left.X * scalar, left.Y * scalar);
         }
 
-        public static Vector2 operator /(Vector2 lhs, float scalar)
+        public static Vector2 operator /(Vector2 left, float scalar)
         {
-            return new Vector2(lhs.X / scalar, lhs.Y / scalar);
+            return new Vector2(left.X / scalar, left.Y / scalar);
         }
-
-
-
     }
 }
