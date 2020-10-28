@@ -53,7 +53,7 @@ namespace MathForGames
                 }
                 Game.SetCurrentScene(Game.CurrentSceneIndex + 1);
                 _player.Position = new Vector2(1, 1);
-                Position = new Vector2(Game.rand.Next(0,30), Game.rand.Next(0, 30));
+                Position = new Vector2(Game.rand.Next(1,30), Game.rand.Next(1, 23));
             }
             base.Update(deltaTime);
         }

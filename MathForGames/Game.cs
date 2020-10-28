@@ -10,7 +10,7 @@ namespace MathForGames
 {
     class Game
     {
-        public static Random rand;
+        public static Random rand = new Random();
         private static bool _gameOver = false;
         private static Scene[] _scenes;
         private static int _currentSceneIndex;
@@ -191,41 +191,56 @@ namespace MathForGames
             //Create a new scene for our actors to exist in
             Scene scene1 = new Scene();
             Scene scene2 = new Scene();
+            Scene scene3 = new Scene();
 
             //Create the actors to add to our scene
-            Enemy enemyHigh = new Enemy(1, 5, Color.GREEN, new Vector2(0,5), new Vector2(30, 5), '■', ConsoleColor.Green);
-            Enemy enemyMid = new Enemy(10, 10, Color.GREEN, new Vector2(0, 10), new Vector2(30, 10), '■', ConsoleColor.Green);
-            Enemy enemyLow = new Enemy(25, 20, Color.GREEN, new Vector2(0, 20), new Vector2(30, 20), '■', ConsoleColor.Green);
-            Player player = new Player(1, 1,Color.BLUE, '@', ConsoleColor.Red);
+            Enemy enemy1 = new Enemy(1, 11.5f, Color.GREEN, new Vector2(15.5f, 23), new Vector2(30, 11.5f), new Vector2(15.5f, 1), new Vector2(1, 11.5f), '■', ConsoleColor.Green);
+            Enemy enemy2 = new Enemy(15.5f, 11.5f, Color.GREEN, new Vector2(1, 11.5f), new Vector2(30, 11.5f), '■', ConsoleColor.Green);
+            Enemy enemy3 = new Enemy(30, 11.5f, Color.GREEN, new Vector2(15.5f, 1), new Vector2(1, 11.5f), new Vector2(15.5f, 23), new Vector2(30, 11.5f), '■', ConsoleColor.Green);
+            Enemy enemy4 = new Enemy(15.5f, 1, Color.GREEN, new Vector2(1, 11.5f), new Vector2(15.5f, 23), new Vector2(30, 11.5f), new Vector2(15.5f, 1), '■', ConsoleColor.Green);
+            Enemy enemy5 = new Enemy(15.5f, 23, Color.GREEN, new Vector2(30, 11.5f), new Vector2(15.5f, 1), new Vector2(1, 11.5f), new Vector2(15.5f, 23), '■', ConsoleColor.Green);
+            Player player = new Player(30, 23,Color.BLUE, '@', ConsoleColor.Red);
             Goal goal = new Goal(30, 21,Color.GREEN, player, 'G', ConsoleColor.Green);
 
-            //Initialize the enmies starting values
-            enemyHigh.Speed = 5;
-            enemyMid.Speed = 5;
-            enemyLow.Speed = 5;
-            enemyHigh.Target = player;
-            enemyMid.Target = player;
-            enemyLow.Target = player;
+            //Initialize the enemies' starting values
+            enemy1.Speed = 5;
+            enemy2.Speed = 5;
+            enemy3.Speed = 5;
+            enemy4.Speed = 5;
+            enemy5.Speed = 5;
+            enemy1.Target = player;
+            enemy2.Target = player;
+            enemy3.Target = player;
+            enemy4.Target = player;
+            enemy5.Target = player;
 
             //Set player's starting speed
             player.Speed = 5;
 
             //Add actors to the scenes
             scene1.AddActor(player);
-            scene1.AddActor(enemyHigh);
-            scene1.AddActor(enemyMid);
-            scene1.AddActor(enemyLow);
+            scene1.AddActor(enemy1);
+            scene1.AddActor(enemy2);
+            scene1.AddActor(enemy3);
             scene1.AddActor(goal);
             scene2.AddActor(player);
-            scene2.AddActor(enemyHigh);
-            scene2.AddActor(enemyMid);
-            scene2.AddActor(enemyLow);
+            scene2.AddActor(enemy4);
+            scene2.AddActor(enemy2);
+            scene2.AddActor(enemy5);
             scene2.AddActor(goal);
-            
+            scene3.AddActor(player);
+            scene3.AddActor(enemy1);
+            scene3.AddActor(enemy2);
+            scene3.AddActor(enemy3);
+            scene3.AddActor(enemy4);
+            scene3.AddActor(enemy5);
+            scene3.AddActor(goal);
+
             //Sets the starting scene index and adds the scenes to the scenes array
             int startingSceneIndex = 0;
             startingSceneIndex = AddScene(scene1);
             AddScene(scene2);
+            AddScene(scene3);
 
             //Sets the current scene to be the starting scene index
             SetCurrentScene(startingSceneIndex);

@@ -17,6 +17,8 @@ namespace MathForGames
         private Color _alertColor;
         private Vector2 _patrolPointA;
         private Vector2 _patrolPointB;
+        private Vector2 _patrolPointC;
+        private Vector2 _patrolPointD;
         private Vector2 _currentPoint;
         private float _speed = 1;
 
@@ -61,6 +63,28 @@ namespace MathForGames
                 _patrolPointB = value;
             }
         }
+        public Vector2 PatrolPointC
+        {
+            get
+            {
+                return _patrolPointC;
+            }
+            set
+            {
+                _patrolPointC = value;
+            }
+        }
+        public Vector2 PatrolPointD
+        {
+            get
+            {
+                return _patrolPointD;
+            }
+            set
+            {
+                _patrolPointD = value;
+            }
+        }
 
         /// <param name="x">Position on the x axis</param>
         /// <param name="y">Position on the y axis</param>
@@ -85,6 +109,28 @@ namespace MathForGames
             _alertColor = Color.RED;
             PatrolPointA = patrolPointA;
             PatrolPointB = patrolPointB;
+            PatrolPointC = patrolPointA;
+            PatrolPointD = patrolPointB;
+            _currentPoint = PatrolPointA;
+        }
+        public Enemy(float x, float y, Color rayColor, Vector2 patrolPointA, Vector2 patrolPointB, Vector2 patrolPointC, char icon = ' ', ConsoleColor color = ConsoleColor.White)
+            : base(x, y, rayColor, icon, color)
+        {
+            _alertColor = Color.RED;
+            PatrolPointA = patrolPointA;
+            PatrolPointB = patrolPointB;
+            PatrolPointC = patrolPointC;
+            PatrolPointD = patrolPointA + new Vector2();
+            _currentPoint = PatrolPointA;
+        }
+        public Enemy(float x, float y, Color rayColor, Vector2 patrolPointA, Vector2 patrolPointB, Vector2 patrolPointC, Vector2 patrolPointD, char icon = ' ', ConsoleColor color = ConsoleColor.White)
+            : base(x, y, rayColor, icon, color)
+        {
+            _alertColor = Color.RED;
+            PatrolPointA = patrolPointA;
+            PatrolPointB = patrolPointB;
+            PatrolPointC = patrolPointC;
+            PatrolPointD = patrolPointD;
             _currentPoint = PatrolPointA;
         }
 
@@ -131,6 +177,10 @@ namespace MathForGames
             if (_currentPoint == PatrolPointA && distance <= 1)
                 _currentPoint = PatrolPointB;
             else if (_currentPoint == PatrolPointB && distance <= 1)
+                _currentPoint = PatrolPointC;
+            else if (_currentPoint == PatrolPointC && distance <= 1)
+                _currentPoint = PatrolPointD;
+            else if (_currentPoint == PatrolPointD && distance <= 1)
                 _currentPoint = PatrolPointA;
 
             //Calcute new velocity to travel to the next waypoint

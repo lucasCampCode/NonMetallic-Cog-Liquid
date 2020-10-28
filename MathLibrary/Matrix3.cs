@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MathLibrary
 {
-    class Matrix3
+    public class Matrix3
     {
         //            x    y    w
         public float m00, m01, m02;
@@ -51,22 +51,27 @@ namespace MathLibrary
                 );
         }
         public static Matrix3 operator *(Matrix3 left, Matrix3 right)
-            {
-                return new Matrix3
-                    (
-                        (left.m00 * left.m00) + (left.m01 * right.m10) + (left.m02 * right.m20),
-                        (left.m00 * left.m01) + (left.m01 * right.m11) + (left.m02 * right.m21),
-                        (left.m00 * left.m02) + (left.m01 * right.m12) + (left.m02 * right.m22),
+        {
+            return new Matrix3
+                (
+                    (left.m00 * left.m00) + (left.m01 * right.m10) + (left.m02 * right.m20),
+                    (left.m00 * left.m01) + (left.m01 * right.m11) + (left.m02 * right.m21),
+                    (left.m00 * left.m02) + (left.m01 * right.m12) + (left.m02 * right.m22),
 
-                        (left.m10 * left.m00) + (left.m11 * right.m10) + (left.m12 * right.m20),
-                        (left.m10 * left.m01) + (left.m11 * right.m11) + (left.m12 * right.m21),
-                        (left.m10 * left.m02) + (left.m11 * right.m12) + (left.m12 * right.m22),
+                    (left.m10 * left.m00) + (left.m11 * right.m10) + (left.m12 * right.m20),
+                    (left.m10 * left.m01) + (left.m11 * right.m11) + (left.m12 * right.m21),
+                    (left.m10 * left.m02) + (left.m11 * right.m12) + (left.m12 * right.m22),
 
-                        (left.m20 * left.m00) + (left.m21 * right.m10) + (left.m22 * right.m20),
-                        (left.m20 * left.m01) + (left.m21 * right.m11) + (left.m22 * right.m21),
-                        (left.m20 * left.m02) + (left.m21 * right.m12) + (left.m22 * right.m22)
-                    );
-            }
-        
+                    (left.m20 * left.m00) + (left.m21 * right.m10) + (left.m22 * right.m20),
+                    (left.m20 * left.m01) + (left.m21 * right.m11) + (left.m22 * right.m21),
+                    (left.m20 * left.m02) + (left.m21 * right.m12) + (left.m22 * right.m22)
+                );
+        }
+        public Matrix3 Rotate(float degrees)
+        {
+            return new Matrix3((float)Math.Sin(degrees), (float)-Math.Cos(degrees), 0,
+                               (float)Math.Cos(degrees), (float)Math.Sin(degrees), 0,
+                               0, 0, 1);
+        }
     } 
 }
