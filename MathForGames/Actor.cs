@@ -113,7 +113,7 @@ namespace MathForGames
         {
             //Draws the actor and a line indicating it facing to the raylib window.
             //Scaled to match console movement
-            Raylib.DrawText(_icon.ToString(), (int)((Position.X * 32) - 14), (int)((Position.Y * 32) - 16), 32, _rayColor);
+            Raylib.DrawText(_icon.ToString(), (int)((Position.X * 32) - 16), (int)((Position.Y * 32) - 16), 32, _rayColor);
             Raylib.DrawLine(
                 (int)(Position.X * 32),
                 (int)(Position.Y * 32),
