@@ -73,5 +73,11 @@ namespace MathLibrary
                                (float)Math.Cos(degrees), (float)Math.Sin(degrees), 0,
                                0, 0, 1);
         }
+        public Matrix3 Traslate(Vector2 vector)
+        {
+            return new Matrix3(1, 0, vector.X,
+                               0, 1, vector.Y,
+                               0, 0, 1);
+        }
     } 
 }
