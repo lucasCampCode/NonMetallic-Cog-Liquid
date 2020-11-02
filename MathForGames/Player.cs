@@ -32,7 +32,7 @@ namespace MathForGames
         public Player(float x, float y, char icon = ' ', ConsoleColor color = ConsoleColor.White)
             : base(x, y, icon, color)
         {
-            
+            _sprite = new Sprite("Images/player.png");
         }
 
         /// <param name="x">Position on the x axis</param>
@@ -43,7 +43,7 @@ namespace MathForGames
         public Player(float x, float y, Color rayColor, char icon = ' ', ConsoleColor color = ConsoleColor.White)
             : base(x, y, rayColor, icon, color)
         {
-
+            _sprite = new Sprite("Images/player.png");
         }
 
         public override void Update(float deltaTime)
@@ -56,6 +56,7 @@ namespace MathForGames
 
             //Set the actors current velocity to be the a vector with the direction found scaled by the speed
             Velocity = new Vector2(xDirection, yDirection);
+            
             Velocity = Velocity.Normalized * Speed;
             
             base.Update(deltaTime);
