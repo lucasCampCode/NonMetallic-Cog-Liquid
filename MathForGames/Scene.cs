@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using MathLibrary;
 
 namespace MathForGames
 {
     class Scene
     {
         private Actor[] _actors;
-
+        private Matrix3 _transform = new Matrix3();
+        public Matrix3 World { get { return _transform; } }
         public bool Started { get; private set; }
 
         public Scene()
@@ -61,9 +63,9 @@ namespace MathForGames
                         _actors[i].End();
                 }
             }
-
             //Set the old array to be the tempArray
             _actors = newArray;
+
             return actorRemoved;
         }
 

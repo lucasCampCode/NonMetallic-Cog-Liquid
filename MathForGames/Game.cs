@@ -181,7 +181,7 @@ namespace MathForGames
         public void Start()
         {
             //Creates a new window for raylib
-            Raylib.InitWindow(1024, 760, "Math For Games");
+            Raylib.InitWindow(1600, 900, "Math For Games");
             Raylib.SetTargetFPS(60);
 
             //Set up console window
@@ -199,8 +199,12 @@ namespace MathForGames
             Enemy enemy3 = new Enemy(30, 11.5f, Color.GREEN, new Vector2(15.5f, 1), new Vector2(1, 11.5f), new Vector2(15.5f, 23), new Vector2(30, 11.5f), '■', ConsoleColor.Green);
             Enemy enemy4 = new Enemy(15.5f, 1, Color.GREEN, new Vector2(1, 11.5f), new Vector2(15.5f, 23), new Vector2(30, 11.5f), new Vector2(15.5f, 1), '■', ConsoleColor.Green);
             Enemy enemy5 = new Enemy(15.5f, 23, Color.GREEN, new Vector2(30, 11.5f), new Vector2(15.5f, 1), new Vector2(1, 11.5f), new Vector2(15.5f, 23), '■', ConsoleColor.Green);
+            Actor planet1 = new Actor(5,0);
+            Actor p1Moon = new Actor(2, 0);
+            Actor planet2 = new Actor(-3, 0);
+            Actor p2Moon = new Actor(1.5f, 0);
             Player player = new Player(1,1, Color.BLUE, '@', ConsoleColor.Red);
-            Goal goal = new Goal(30, 21,Color.GREEN, player, 'G', ConsoleColor.Green);
+            Goal goal = new Goal(15.5f, 11.5f, Color.GREEN, player, 'G', ConsoleColor.Green);
 
             //Initialize the enemies' starting values
             enemy1.Speed = 5;
@@ -213,16 +217,28 @@ namespace MathForGames
             enemy3.Target = player;
             enemy4.Target = player;
             enemy5.Target = player;
-
             //Set player's starting speed
             player.Speed = 5;
-            player.SetTranslate(new Vector2(1, 1));
+
+            goal.AddChild(planet1);
+            planet1.AddChild(p1Moon);
+            goal.AddChild(planet2);
+            planet2.AddChild(p2Moon);
+
+
+            planet1.SetScale(1, 1);
+            p1Moon.SetScale(1.75f, 1.75f);
+
             //Add actors to the scenes
             scene1.AddActor(player);
+            scene1.AddActor(planet1);
+            scene1.AddActor(p1Moon);
+            scene1.AddActor(planet2);
+            scene1.AddActor(p2Moon);
             //scene1.AddActor(enemy1);
             //scene1.AddActor(enemy2);
             //scene1.AddActor(enemy3);
-            //scene1.AddActor(goal);
+            scene1.AddActor(goal);
             scene2.AddActor(player);
             scene2.AddActor(enemy4);
             scene2.AddActor(enemy2);

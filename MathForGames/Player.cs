@@ -58,6 +58,8 @@ namespace MathForGames
             Velocity = new Vector2(xDirection, yDirection);
             Velocity = Velocity.Normalized * Speed;
             
+            SetRotation(-(float)Math.Atan2(Velocity.Y, Velocity.X));
+
             base.Update(deltaTime);
         }
     }

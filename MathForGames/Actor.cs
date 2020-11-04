@@ -14,26 +14,36 @@ namespace MathForGames
     class Actor
     {
         protected char _icon = ' ';
+        private float _rotate = 0;
         protected Vector2 _velocity;
-        protected Matrix3 _transform;
+        protected Matrix3 _lolcalTransform = new Matrix3();
+        protected Matrix3 _globalTransform = new Matrix3();
         private Matrix3 _translation = new Matrix3();
         private Matrix3 _rotation = new Matrix3();
         private Matrix3 _scale = new Matrix3();
         protected ConsoleColor _color;
         protected Color _rayColor;
         protected Sprite _sprite;
-        public bool Started { get; private set; }
+        protected Actor[] _children = new Actor[0];
 
+        public bool Started { get; private set; }
+        public Actor Parent { get; private set; }
         public Vector2 Forward
         {
-            get { return new Vector2(_transform.m11,_transform.m21); }
+            get { return new Vector2(_globalTransform.m11,_globalTransform.m21); }
             
         }
-        public Vector2 Position
+
+        public Vector2 WorldPosition
+        {
+            get { return new Vector2(_globalTransform.m13, _globalTransform.m23); }
+        }
+
+        public Vector2 LocalPosition
         {
             get
             {
-                return new Vector2(_transform.m13,_transform.m23);
+                return new Vector2(_lolcalTransform.m13,_lolcalTransform.m23);
             }
             set
             {
@@ -63,8 +73,7 @@ namespace MathForGames
         {
             _rayColor = Color.WHITE;
             _icon = icon;
-            _transform = new Matrix3();
-            Position = new Vector2(x, y);
+            LocalPosition = new Vector2(x, y);
             _velocity = new Vector2();
             _color = color;
             _sprite = new Sprite("Images/enemy.png");
@@ -81,6 +90,79 @@ namespace MathForGames
             _rayColor = rayColor;
         }
 
+        public void AddChild(Actor child)
+        {
+            Actor[] tempArray = new Actor[_children.Length + 1];
+            //Copy the values from the old array to the new array
+            for (int i = 0; i < _children.Length; i++)
+            {
+                tempArray[i] = _children[i];
+            }
+            //Set the last value in the new array to be the actor we want to add
+            tempArray[_children.Length] = child;
+
+            //Set old array to hold the values of the new array
+            _children = tempArray;
+
+            child.Parent = this;
+        }
+
+        public bool RemoveChild(Actor child)
+        {
+            if (child == null)
+                return false;
+
+            bool childRemoved = false;
+
+            Actor[] tempArray = new Actor[_children.Length - 1];
+            int j = 0;
+            //Copy the values from the old array to the new array
+            for (int i = 0; i < _children.Length; i++)
+            {
+                if (child != _children[i])
+                {
+                    tempArray[j] = _children[i];
+                    j++;
+                }
+                else
+                {
+                    childRemoved = true;
+                }
+            }
+            
+            //Set old array to hold the values of the new array
+            _children = tempArray;
+            child.Parent = null;
+            return childRemoved;
+        }
+        public bool RemoveChild(int index)
+        {
+            if (index < 0 || index >_children.Length)
+                return false;
+
+            bool childRemoved = false;
+
+            Actor[] tempArray = new Actor[_children.Length - 1];
+            int j = 0;
+            //Copy the values from the old array to the new array
+            for (int i = 0; i < _children.Length; i++)
+            {
+                if (index != i)
+                {
+                    tempArray[j] = _children[i];
+                    j++;
+                }
+                else
+                {
+                    childRemoved = true;
+                }
+            }
+            //Set old array to hold the values of the new array
+            _children = tempArray;
+
+            return childRemoved;
+        }
+
         public virtual void Start()
         {
             Started = true;
@@ -92,12 +174,18 @@ namespace MathForGames
             _translation.m23 = position.Y;
         }
 
+
         public void SetRotation(float radians)
         {
             _rotation.m11 = (float)Math.Cos(radians);
             _rotation.m12 = (float)Math.Sin(radians);
             _rotation.m21 = -(float)Math.Sin(radians);
             _rotation.m22 = (float)Math.Cos(radians);
+        }
+        public void Rotate(float radians)
+        {
+            _rotate += radians;
+            SetRotation(_rotate);
         }
         
         public void SetScale(float x,float y)
@@ -107,32 +195,41 @@ namespace MathForGames
         }
         private void UpdateTransform()
         {
-            //SetTranslate(Position);
-            SetRotation(-(float)Math.Atan2(Velocity.Y, Velocity.X));
-            SetScale(1, 1);
-
-            _transform =_translation * _rotation * _scale;
+            _lolcalTransform =  _translation * _rotation * _scale;
         }
 
+        public void UpdateGlobalTransform()
+        {
+            if (Parent != null)
+            {
+                _globalTransform = Parent._globalTransform * _lolcalTransform;
+
+            }
+            else
+            {
+                _globalTransform = _lolcalTransform;
+            }
+        }
         public virtual void Update(float deltaTime)
         {
             //Increase position by the current velocity
+            
             UpdateTransform();
-            Position += _velocity * deltaTime; 
+            UpdateGlobalTransform();
+            Rotate(0.15f);
+            LocalPosition += _velocity * deltaTime;
         }
+
 
         public virtual void Draw()
         {
-            //Draws the actor and a line indicating it facing to the raylib window.
-            //Scaled to match console movement
-            _sprite.Draw(_transform);
-
-            Raylib.DrawText(_icon.ToString(), (int)(Position.X * 32), (int)(Position.Y * 32), 32, _rayColor);
+            //draws sprite and direction they are pointing
+            _sprite.Draw(_globalTransform);
             Raylib.DrawLine(
-                (int)(Position.X * 32),
-                (int)(Position.Y * 32),
-                (int)((Position.X + Forward.X) * 32),
-                (int)((Position.Y + Forward.Y) * 32),
+                (int)(WorldPosition.X * 32),
+                (int)(WorldPosition.Y * 32),
+                (int)((WorldPosition.X + Forward.X) * 32),
+                (int)((WorldPosition.Y + Forward.Y) * 32),
                 Color.WHITE
             );
 
@@ -140,10 +237,10 @@ namespace MathForGames
             Console.ForegroundColor = _color;
 
             //Only draws the actor on the console if it is within the bounds of the window
-            if(Position.X >= 0 && Position.X < Console.WindowWidth 
-                && Position.Y >= 0  && Position.Y < Console.WindowHeight)
+            if(LocalPosition.X >= 0 && LocalPosition.X < Console.WindowWidth 
+                && LocalPosition.Y >= 0  && LocalPosition.Y < Console.WindowHeight)
             {
-                Console.SetCursorPosition((int)Position.X, (int)Position.Y);
+                Console.SetCursorPosition((int)LocalPosition.X, (int)LocalPosition.Y);
                 Console.Write(_icon);
             }
             

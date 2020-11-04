@@ -38,12 +38,13 @@ namespace MathForGames
         /// <returns></returns>
         private bool CheckPlayerDistance()
         {
-            float distance = (_player.Position - Position).Magnitude;
+            float distance = (_player.LocalPosition - LocalPosition).Magnitude;
             return distance <= 1;
         }
 
         public override void Update(float deltaTime)
         {
+            Rotate(0.25f);
             //If the player is in range of the goal, end the game
             if (CheckPlayerDistance())
             {
@@ -52,8 +53,8 @@ namespace MathForGames
                     Game.SetGameOver(true);
                 }
                 Game.SetCurrentScene(Game.CurrentSceneIndex + 1);
-                _player.Position = new Vector2(1, 1);
-                Position = new Vector2(Game.rand.Next(1,30), Game.rand.Next(1, 23));
+                _player.LocalPosition = new Vector2(1, 1);
+                LocalPosition = new Vector2(Game.rand.Next(1,30), Game.rand.Next(1, 23));
             }
             base.Update(deltaTime);
         }
