@@ -8,76 +8,58 @@ namespace MathLibrary
     public class Matrix3
     {
         //            x    y    w
-        public float m00, m01, m02;
-        public float m10, m11, m12;
-        public float m20, m21, m22;
+        public float m11, m12, m13;
+        public float m21, m22, m23;
+        public float m31, m32, m33;
 
         public Matrix3()
         {
-            m00 = 1; m01 = 0; m02 = 0;
-            m10 = 0; m11 = 1; m12 = 0;
-            m20 = 0; m21 = 0; m22 = 1;
+            m11 = 1; m12 = 0; m13 = 0;
+            m21 = 0; m22 = 1; m23 = 0;
+            m31 = 0; m32 = 0; m33 = 1;
         }
         public Matrix3(float m00, float m01, float m02,
                        float m10, float m11, float m12,
                        float m20, float m21, float m22)
         {
-            this.m00 = m00; this.m01 = m01; this.m02 = m02;
-            this.m10 = m10; this.m11 = m11; this.m12 = m12;
-            this.m20 = m20; this.m21 = m21; this.m22 = m22;
-        }
-        public Matrix3(Vector2 position, float rotation, float scale)
-        {
-            m00 = scale; m01 = -rotation; m02 = position.X;
-            m10 = rotation; m11 = scale; m12 = position.Y;
-            m20 = 0; m21 = 0; m22 = 1;
+            this.m11 = m00; this.m12 = m01; this.m13 = m02;
+            this.m21 = m10; this.m22 = m11; this.m23 = m12;
+            this.m31 = m20; this.m32 = m21; this.m33 = m22;
         }
         public static Matrix3 operator +(Matrix3 left, Matrix3 right)
         {
             return new Matrix3
                 (
-                    left.m00 + right.m00, left.m01 + right.m01, left.m02 + right.m02,
-                    left.m10 + right.m10, left.m11 + right.m11, left.m12 + right.m12,
-                    left.m10 + right.m20, left.m21 + right.m21, left.m22 + right.m22
+                    left.m11 + right.m11, left.m12 + right.m12, left.m13 + right.m13,
+                    left.m21 + right.m21, left.m22 + right.m22, left.m23 + right.m23,
+                    left.m21 + right.m31, left.m32 + right.m32, left.m33 + right.m33
                 );
         }
         public static Matrix3 operator -(Matrix3 left, Matrix3 right)
         {
             return new Matrix3
                 (
-                    left.m00 - right.m00, left.m01 - right.m01, left.m02 - right.m02,
-                    left.m10 - right.m10, left.m11 - right.m11, left.m12 - right.m12,
-                    left.m10 - right.m20, left.m21 - right.m21, left.m22 - right.m22
+                    left.m11 - right.m11, left.m12 - right.m12, left.m13 - right.m13,
+                    left.m21 - right.m21, left.m22 - right.m22, left.m23 - right.m23,
+                    left.m21 - right.m31, left.m32 - right.m32, left.m33 - right.m33
                 );
         }
         public static Matrix3 operator *(Matrix3 left, Matrix3 right)
         {
             return new Matrix3
                 (
-                    (left.m00 * left.m00) + (left.m01 * right.m10) + (left.m02 * right.m20),
-                    (left.m00 * left.m01) + (left.m01 * right.m11) + (left.m02 * right.m21),
-                    (left.m00 * left.m02) + (left.m01 * right.m12) + (left.m02 * right.m22),
+                    left.m11 * right.m11 + left.m12 * right.m21 + left.m13 * right.m31,
+                    left.m11 * right.m12 + left.m12 * right.m22 + left.m13 * right.m32,
+                    left.m11 * right.m13 + left.m12 * right.m23 + left.m13 * right.m33,
 
-                    (left.m10 * left.m00) + (left.m11 * right.m10) + (left.m12 * right.m20),
-                    (left.m10 * left.m01) + (left.m11 * right.m11) + (left.m12 * right.m21),
-                    (left.m10 * left.m02) + (left.m11 * right.m12) + (left.m12 * right.m22),
+                    left.m21 * right.m11 + left.m22 * right.m21 + left.m23 * right.m31,
+                    left.m21 * right.m12 + left.m22 * right.m22 + left.m23 * right.m32,
+                    left.m21 * right.m13 + left.m22 * right.m23 + left.m23 * right.m33,
 
-                    (left.m20 * left.m00) + (left.m21 * right.m10) + (left.m22 * right.m20),
-                    (left.m20 * left.m01) + (left.m21 * right.m11) + (left.m22 * right.m21),
-                    (left.m20 * left.m02) + (left.m21 * right.m12) + (left.m22 * right.m22)
+                    left.m31 * right.m11 + left.m32 * right.m21 + left.m33 * right.m31,
+                    left.m31 * right.m12 + left.m32 * right.m22 + left.m33 * right.m32,
+                    left.m31 * right.m13 + left.m32 * right.m23 + left.m33 * right.m33
                 );
-        }
-        public Matrix3 Rotate(float degrees)
-        {
-            return new Matrix3((float)Math.Sin(degrees), (float)-Math.Cos(degrees), 0,
-                               (float)Math.Cos(degrees), (float)Math.Sin(degrees), 0,
-                               0, 0, 1);
-        }
-        public Matrix3 Traslate(Vector2 vector)
-        {
-            return new Matrix3(1, 0, vector.X,
-                               0, 1, vector.Y,
-                               0, 0, 1);
         }
     } 
 }
