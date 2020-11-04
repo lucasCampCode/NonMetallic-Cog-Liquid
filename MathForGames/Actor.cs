@@ -15,7 +15,7 @@ namespace MathForGames
     {
         protected char _icon = ' ';
         protected Vector2 _velocity;
-        protected Matrix3 _transform = new Matrix3();
+        protected Matrix3 _transform;
         private Matrix3 _translation = new Matrix3();
         private Matrix3 _rotation = new Matrix3();
         private Matrix3 _scale = new Matrix3();
@@ -37,8 +37,8 @@ namespace MathForGames
             }
             set
             {
-                _transform.m13 = value.X;
-                _transform.m23 = value.Y;
+                _translation.m13 = value.X;
+                _translation.m23 = value.Y;
             }
         }
 
@@ -63,6 +63,7 @@ namespace MathForGames
         {
             _rayColor = Color.WHITE;
             _icon = icon;
+            _transform = new Matrix3();
             Position = new Vector2(x, y);
             _velocity = new Vector2();
             _color = color;
@@ -106,29 +107,25 @@ namespace MathForGames
         }
         private void UpdateTransform()
         {
-            //SetTranslate(new Vector2(1,1));
-            SetRotation(0);
+            //SetTranslate(Position);
+            SetRotation(-(float)Math.Atan2(Velocity.Y, Velocity.X));
             SetScale(1, 1);
 
-            _transform = _translation * _rotation * _scale;
+            _transform =_translation * _rotation * _scale;
         }
 
         public virtual void Update(float deltaTime)
         {
             //Increase position by the current velocity
-            Position += _velocity * deltaTime; 
             UpdateTransform();
-
-            _transform.m13 = Math.Clamp(_transform.m13, 0, Raylib.GetScreenWidth() / 32);
-            _transform.m23 = Math.Clamp(_transform.m23, 0, Raylib.GetScreenHeight() / 32);
+            Position += _velocity * deltaTime; 
         }
 
         public virtual void Draw()
         {
             //Draws the actor and a line indicating it facing to the raylib window.
             //Scaled to match console movement
-            if(_sprite != null)
-                _sprite.Draw(_transform);
+            _sprite.Draw(_transform);
 
             Raylib.DrawText(_icon.ToString(), (int)(Position.X * 32), (int)(Position.Y * 32), 32, _rayColor);
             Raylib.DrawLine(

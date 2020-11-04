@@ -56,7 +56,6 @@ namespace MathForGames
 
             //Set the actors current velocity to be the a vector with the direction found scaled by the speed
             Velocity = new Vector2(xDirection, yDirection);
-            
             Velocity = Velocity.Normalized * Speed;
             
             base.Update(deltaTime);

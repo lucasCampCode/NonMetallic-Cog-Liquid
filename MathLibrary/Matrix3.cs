@@ -48,17 +48,17 @@ namespace MathLibrary
         {
             return new Matrix3
                 (
-                    left.m11 * left.m11 + left.m12 * right.m21 + left.m13 * right.m31,
-                    left.m11 * left.m12 + left.m12 * right.m22 + left.m13 * right.m32,
-                    left.m11 * left.m13 + left.m12 * right.m23 + left.m13 * right.m33,
+                    left.m11 * right.m11 + left.m12 * right.m21 + left.m13 * right.m31,
+                    left.m11 * right.m12 + left.m12 * right.m22 + left.m13 * right.m32,
+                    left.m11 * right.m13 + left.m12 * right.m23 + left.m13 * right.m33,
 
-                    left.m21 * left.m11 + left.m22 * right.m21 + left.m23 * right.m31,
-                    left.m21 * left.m12 + left.m22 * right.m22 + left.m23 * right.m32,
-                    left.m21 * left.m13 + left.m22 * right.m23 + left.m23 * right.m33,
+                    left.m21 * right.m11 + left.m22 * right.m21 + left.m23 * right.m31,
+                    left.m21 * right.m12 + left.m22 * right.m22 + left.m23 * right.m32,
+                    left.m21 * right.m13 + left.m22 * right.m23 + left.m23 * right.m33,
 
-                    left.m31 * left.m11 + left.m32 * right.m21 + left.m33 * right.m31,
-                    left.m31 * left.m12 + left.m32 * right.m22 + left.m33 * right.m32,
-                    left.m31 * left.m13 + left.m32 * right.m23 + left.m33 * right.m33
+                    left.m31 * right.m11 + left.m32 * right.m21 + left.m33 * right.m31,
+                    left.m31 * right.m12 + left.m32 * right.m22 + left.m33 * right.m32,
+                    left.m31 * right.m13 + left.m32 * right.m23 + left.m33 * right.m33
                 );
         }
     } 
