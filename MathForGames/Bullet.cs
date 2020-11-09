@@ -24,7 +24,7 @@ namespace MathForGames
 
         public override void OnCollision(Actor other)
         {
-            if (other is Enemy)
+            if (other is Enemy || other is Planet)
                 other.Destroy();
 
             base.OnCollision(other);

@@ -13,7 +13,6 @@ namespace MathForGames
     {
         private float _speed = 1;
         private Sprite _sprite;
-        private float rotation;
         private float _bulletSpeed = 10;
 
         public float Speed
