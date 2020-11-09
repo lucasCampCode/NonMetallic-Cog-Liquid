@@ -154,7 +154,7 @@ namespace MathForGames
                 return false;
 
             //Find the vector representing the distance between the actor and its target
-            Vector2 direction = Target.LocalPosition -  LocalPosition;
+            Vector2 direction = Target.LocalPosition - LocalPosition;
             //Get the magnitude of the distance vector
             float distance = direction.Magnitude;
             //Use the inverse cosine to find the angle of the dot product in radians
@@ -192,11 +192,17 @@ namespace MathForGames
             Velocity = direction.Normalized * Speed;
         }
 
+        public override void Start()
+        {
+            LocalPosition = PatrolPointA;
+            _currentPoint = PatrolPointB;
+            base.Start();
+        }
         public override void Update(float deltaTime)
         {
             //If the target can be seen change the color to red and reset the player's position
             //If the target can't be seen change the color to blue
-            if(CheckTargetInSight(0.5f, 5))
+            if (CheckTargetInSight(0.5f, 5))
             {
                 _rayColor = Color.RED;
                 Target.LocalPosition = new Vector2();

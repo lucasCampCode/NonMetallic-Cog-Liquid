@@ -47,6 +47,15 @@ namespace MathForGames
             _sprite = new Sprite("Images/player.png");
         }
 
+        public override void OnCollision(Actor other)
+        {
+            if(other is Enemy)
+            {
+                Game.GetCurrentScene().RemoveActor(other);
+            }
+            base.OnCollision(other);
+        }
+
         public override void Update(float deltaTime)
         {
             //Gets the player's input to determine which direction the actor will move in on each axis 

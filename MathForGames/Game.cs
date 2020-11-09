@@ -73,7 +73,7 @@ namespace MathForGames
             Scene[] tempArray = new Scene[_scenes.Length + 1];
 
             //Copy values from old array into new array
-            for(int i = 0; i < _scenes.Length; i++)
+            for (int i = 0; i < _scenes.Length; i++)
             {
                 tempArray[i] = _scenes[i];
             }
@@ -109,7 +109,7 @@ namespace MathForGames
 
             //Copy all scenes except the scene we don't want into the new array
             int j = 0;
-            for(int i = 0; i < _scenes.Length; i++)
+            for (int i = 0; i < _scenes.Length; i++)
             {
                 if (tempArray[i] != scene)
                 {
@@ -123,7 +123,7 @@ namespace MathForGames
             }
 
             //If the scene was successfully removed set the old array to be the new array
-            if(sceneRemoved)
+            if (sceneRemoved)
                 _scenes = tempArray;
 
             return sceneRemoved;
@@ -194,7 +194,7 @@ namespace MathForGames
             Enemy enemy3 = new Enemy(30, 11.5f, Color.GREEN, new Vector2(15.5f, 1), new Vector2(1, 11.5f), new Vector2(15.5f, 23), new Vector2(30, 11.5f), '■', ConsoleColor.Green);
             Enemy enemy4 = new Enemy(15.5f, 1, Color.GREEN, new Vector2(1, 11.5f), new Vector2(15.5f, 23), new Vector2(30, 11.5f), new Vector2(15.5f, 1), '■', ConsoleColor.Green);
             Enemy enemy5 = new Enemy(15.5f, 23, Color.GREEN, new Vector2(30, 11.5f), new Vector2(15.5f, 1), new Vector2(1, 11.5f), new Vector2(15.5f, 23), '■', ConsoleColor.Green);
-            Player player = new Player(1,1, Color.BLUE, '@', ConsoleColor.Red);
+            Player player = new Player(1, 26, Color.BLUE, '@', ConsoleColor.Red);
             Goal goal = new Goal(15.5f, 11.5f, Color.GREEN, player, 'G', ConsoleColor.Green);
 
             //Initialize the enemies' starting values
@@ -209,7 +209,7 @@ namespace MathForGames
             enemy4.Target = player;
             enemy5.Target = player;
             //Set player's starting speed
-            player.Speed = 5;
+            player.Speed = 6;
 
 
 
@@ -281,7 +281,7 @@ namespace MathForGames
             Start();
 
             //Loops the game until either the game is set to be over or the window closes
-            while(!_gameOver && !Raylib.WindowShouldClose())
+            while (!_gameOver && !Raylib.WindowShouldClose())
             {
                 //Stores the current time between frames
                 float deltaTime = Raylib.GetFrameTime();
@@ -294,7 +294,7 @@ namespace MathForGames
                     Console.ReadKey(true);
             }
             End();
-            
+
         }
     }
 }

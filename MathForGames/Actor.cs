@@ -15,6 +15,7 @@ namespace MathForGames
     {
         protected char _icon = ' ';
         private float _rotationAngle = 0;
+        private float _collisionRadius;
         protected Vector2 _velocity;
         protected Matrix3 _localTransform = new Matrix3();
         protected Matrix3 _globalTransform = new Matrix3();
@@ -29,7 +30,7 @@ namespace MathForGames
         public Actor Parent { get; private set; }
         public Vector2 Forward
         {
-            get { return new Vector2(_globalTransform.m11,_globalTransform.m21); }
+            get { return new Vector2(_globalTransform.m11, _globalTransform.m21); }
             set
             {
                 Vector2 lookPosition = LocalPosition + value.Normalized;
@@ -46,7 +47,7 @@ namespace MathForGames
         {
             get
             {
-                return new Vector2(_localTransform.m13,_localTransform.m23);
+                return new Vector2(_localTransform.m13, _localTransform.m23);
             }
             set
             {
@@ -72,22 +73,23 @@ namespace MathForGames
         /// <param name="y">Position on the y axis</param>
         /// <param name="icon">The symbol that will appear when drawn</param>
         /// <param name="color">The color of the symbol that will appear when drawn</param>
-        public Actor( float x, float y,char icon = ' ', ConsoleColor color = ConsoleColor.White)
+        public Actor(float x, float y, char icon = ' ', ConsoleColor color = ConsoleColor.White)
         {
             _rayColor = Color.WHITE;
             _icon = icon;
             LocalPosition = new Vector2(x, y);
             _velocity = new Vector2();
             _color = color;
+            _collisionRadius = 1;
         }
-        
+
         /// <param name="x">Position on the x axis</param>
         /// <param name="y">Position on the y axis</param>
         /// <param name="rayColor">The color of the symbol that will appear when drawn to raylib</param>
         /// <param name="icon">The symbol that will appear when drawn</param>
         /// <param name="color">The color of the symbol that will appear when drawn to the console</param>
         public Actor(float x, float y, Color rayColor, char icon = ' ', ConsoleColor color = ConsoleColor.White)
-            : this(x,y,icon,color)
+            : this(x, y, icon, color)
         {
             _rayColor = rayColor;
         }
@@ -130,7 +132,7 @@ namespace MathForGames
                     childRemoved = true;
                 }
             }
-            
+
             //Set old array to hold the values of the new array
             _children = tempArray;
             child.Parent = null;
@@ -138,7 +140,7 @@ namespace MathForGames
         }
         public bool RemoveChild(int index)
         {
-            if (index < 0 || index >_children.Length)
+            if (index < 0 || index > _children.Length)
                 return false;
 
             bool childRemoved = false;
@@ -182,7 +184,7 @@ namespace MathForGames
             _rotationAngle += radians;
             SetRotation(_rotationAngle);
         }
-        public void SetScale(float x,float y)
+        public void SetScale(float x, float y)
         {
             _scale.m11 = x;
             _scale.m22 = y;
@@ -216,9 +218,23 @@ namespace MathForGames
             Rotate(angle);
         }
 
+        public bool CheckCollision(Actor other)
+        {
+            float distance = (other.WorldPosition - WorldPosition).Magnitude;
+            if (distance < (other._collisionRadius + _collisionRadius))
+            {
+                return true;
+            }
+            return false;
+        }
+        public virtual void OnCollision(Actor other)
+        {
+
+        }
+
         private void UpdateTransform()
         {
-            _localTransform =  _translation * _rotation * _scale;
+            _localTransform = _translation * _rotation * _scale;
         }
         private void UpdateFacing()
         {
@@ -247,7 +263,7 @@ namespace MathForGames
         public virtual void Update(float deltaTime)
         {
             //Increase position by the current velocity
-            
+
             UpdateTransform();
             UpdateGlobalTransform();
             UpdateFacing();
@@ -268,13 +284,13 @@ namespace MathForGames
             Console.ForegroundColor = _color;
 
             //Only draws the actor on the console if it is within the bounds of the window
-            if(LocalPosition.X >= 0 && LocalPosition.X < Console.WindowWidth 
-                && LocalPosition.Y >= 0  && LocalPosition.Y < Console.WindowHeight)
+            if (LocalPosition.X >= 0 && LocalPosition.X < Console.WindowWidth
+                && LocalPosition.Y >= 0 && LocalPosition.Y < Console.WindowHeight)
             {
                 Console.SetCursorPosition((int)LocalPosition.X, (int)LocalPosition.Y);
                 Console.Write(_icon);
             }
-            
+
             //Reset console text color to be default color
             Console.ForegroundColor = Game.DefaultColor;
         }

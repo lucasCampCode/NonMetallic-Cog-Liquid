@@ -51,13 +51,13 @@ namespace MathForGames
             //If the player is in range of the goal, end the game
             if (CheckPlayerDistance())
             {
-                if(Game.CurrentSceneIndex == Game.SceneLength - 1)
+                if (Game.CurrentSceneIndex == Game.SceneLength - 1)
                 {
                     Game.SetGameOver(true);
                 }
                 Game.SetCurrentScene(Game.CurrentSceneIndex + 1);
-                _player.LocalPosition = new Vector2(1, 1);
-                LocalPosition = new Vector2(Game.rand.Next(1,30), Game.rand.Next(1, 23));
+                _player.LocalPosition = new Vector2(1, 26);
+                LocalPosition = new Vector2(Game.rand.Next(1, 30), Game.rand.Next(1, 23));
             }
             base.Update(deltaTime);
         }
