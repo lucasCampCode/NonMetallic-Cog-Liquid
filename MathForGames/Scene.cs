@@ -106,6 +106,20 @@ namespace MathForGames
         {
             Started = true;
         }
+        public virtual void CheckCollision()
+        {
+            for (int i = 0; i < _actors.Length; i++)
+            {
+                for (int j = 0; j < _actors.Length; j++)
+                {
+                    if (i >= _actors.Length)
+                        break;
+
+                    if (_actors[i].CheckCollision(_actors[j]) && i != j)
+                        _actors[i].OnCollision(_actors[j]);
+                }
+            }
+        }
         public virtual void Update(float deltaTime)
         {
             for (int i = 0; i < _actors.Length; i++)
@@ -114,14 +128,8 @@ namespace MathForGames
                     _actors[i].Start();
 
                 _actors[i].Update(deltaTime);
-                for (int j = 0; j < _actors.Length; j++)
-                {
-                    if (_actors[i].CheckCollision(_actors[j]))
-                    {
-                        _actors[i].OnCollision(_actors[j]);
-                    }
-                }
             }
+            CheckCollision();
         }
         public virtual void Draw()
         {

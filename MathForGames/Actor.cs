@@ -73,14 +73,14 @@ namespace MathForGames
         /// <param name="y">Position on the y axis</param>
         /// <param name="icon">The symbol that will appear when drawn</param>
         /// <param name="color">The color of the symbol that will appear when drawn</param>
-        public Actor(float x, float y, char icon = ' ', ConsoleColor color = ConsoleColor.White)
+        public Actor(float x, float y, float collisionRadius, char icon = ' ', ConsoleColor color = ConsoleColor.White)
         {
             _rayColor = Color.WHITE;
             _icon = icon;
             LocalPosition = new Vector2(x, y);
             _velocity = new Vector2();
             _color = color;
-            _collisionRadius = 1;
+            _collisionRadius = collisionRadius;
         }
 
         /// <param name="x">Position on the x axis</param>
@@ -88,8 +88,8 @@ namespace MathForGames
         /// <param name="rayColor">The color of the symbol that will appear when drawn to raylib</param>
         /// <param name="icon">The symbol that will appear when drawn</param>
         /// <param name="color">The color of the symbol that will appear when drawn to the console</param>
-        public Actor(float x, float y, Color rayColor, char icon = ' ', ConsoleColor color = ConsoleColor.White)
-            : this(x, y, icon, color)
+        public Actor(float x, float y, Color rayColor, float collisionRadius, char icon = ' ', ConsoleColor color = ConsoleColor.White)
+            : this(x, y, collisionRadius, icon, color)
         {
             _rayColor = rayColor;
         }
@@ -221,11 +221,7 @@ namespace MathForGames
         public bool CheckCollision(Actor other)
         {
             float distance = (other.WorldPosition - WorldPosition).Magnitude;
-            if (distance < (other._collisionRadius + _collisionRadius))
-            {
-                return true;
-            }
-            return false;
+            return distance <= _collisionRadius + other._collisionRadius;
         }
         public virtual void OnCollision(Actor other)
         {
@@ -236,7 +232,7 @@ namespace MathForGames
         {
             _localTransform = _translation * _rotation * _scale;
         }
-        private void UpdateFacing()
+        public void UpdateFacing()
         {
             if (_velocity.Magnitude <= 0)
                 return;
@@ -251,10 +247,21 @@ namespace MathForGames
             }
             else
             {
-                _globalTransform = _localTransform;
+                _globalTransform = Game.GetCurrentScene().World * _localTransform;
+            }
+            for (int i = 0; i < _children.Length; i++)
+            {
+                _children[i].UpdateGlobalTransform();
             }
         }
 
+        public void Destroy()
+        {
+            Game.GetCurrentScene().RemoveActor(this);
+            if (Parent != null)
+                Parent.RemoveChild(this);
+            End();
+        }
 
         public virtual void Start()
         {
@@ -266,7 +273,6 @@ namespace MathForGames
 
             UpdateTransform();
             UpdateGlobalTransform();
-            UpdateFacing();
             LocalPosition += _velocity * deltaTime;
         }
         public virtual void Draw()

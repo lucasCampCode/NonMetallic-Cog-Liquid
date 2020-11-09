@@ -16,8 +16,8 @@ namespace MathForGames
         /// <param name="y">Position on the y axis</param>
         /// <param name="icon">The symbol that will appear when drawn</param>
         /// <param name="color">The color of the symbol that will appear when drawn</param>
-        public Goal(float x, float y, Actor player, char icon = ' ', ConsoleColor color = ConsoleColor.White)
-            : base(x, y, icon, color)
+        public Goal(float x, float y, float collisionRadius, Actor player, char icon = ' ', ConsoleColor color = ConsoleColor.White)
+            : base(x, y, collisionRadius, icon, color)
         {
             _player = player;
             _sprite = new Sprite("Images/goal.png");
@@ -28,8 +28,8 @@ namespace MathForGames
         /// <param name="rayColor">The color of the symbol that will appear when drawn to raylib</param>
         /// <param name="icon">The symbol that will appear when drawn</param>
         /// <param name="color">The color of the symbol that will appear when drawn to the console</param>
-        public Goal(float x, float y, Color rayColor, Actor player, char icon = ' ', ConsoleColor color = ConsoleColor.White)
-            : base(x, y, rayColor, icon, color)
+        public Goal(float x, float y, Color rayColor, float collisionRadius, Actor player, char icon = ' ', ConsoleColor color = ConsoleColor.White)
+            : base(x, y, rayColor, collisionRadius, icon, color)
         {
             _player = player;
             _sprite = new Sprite("Images/goal.png");
@@ -42,7 +42,7 @@ namespace MathForGames
         private bool CheckPlayerDistance()
         {
             float distance = (_player.LocalPosition - LocalPosition).Magnitude;
-            return distance <= 1;
+            return distance <= 2;
         }
 
         public override void Update(float deltaTime)

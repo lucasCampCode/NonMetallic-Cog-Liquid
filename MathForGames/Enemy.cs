@@ -90,8 +90,8 @@ namespace MathForGames
         /// <param name="y">Position on the y axis</param>
         /// <param name="icon">The symbol that will appear when drawn</param>
         /// <param name="color">The color of the symbol that will appear when drawn</param>
-        public Enemy(float x, float y, Vector2 patrolPointA, Vector2 patrolPointB, char icon = ' ', ConsoleColor color = ConsoleColor.White)
-            : base(x, y, icon, color)
+        public Enemy(float x, float y, float collisionRadius, Vector2 patrolPointA, Vector2 patrolPointB, char icon = ' ', ConsoleColor color = ConsoleColor.White)
+            : base(x, y, collisionRadius, icon, color)
         {
             PatrolPointA = patrolPointA;
             PatrolPointB = patrolPointB;
@@ -104,8 +104,8 @@ namespace MathForGames
         /// <param name="rayColor">The color of the symbol that will appear when drawn to raylib</param>
         /// <param name="icon">The symbol that will appear when drawn</param>
         /// <param name="color">The color of the symbol that will appear when drawn to the console</param>
-        public Enemy(float x, float y, Color rayColor, Vector2 patrolPointA, Vector2 patrolPointB, char icon = ' ', ConsoleColor color = ConsoleColor.White)
-            : base(x, y, rayColor, icon, color)
+        public Enemy(float x, float y, Color rayColor, float collisionRadius, Vector2 patrolPointA, Vector2 patrolPointB, char icon = ' ', ConsoleColor color = ConsoleColor.White)
+            : base(x, y, rayColor, collisionRadius, icon, color)
         {
             _alertColor = Color.RED;
             PatrolPointA = patrolPointA;
@@ -115,8 +115,8 @@ namespace MathForGames
             _currentPoint = PatrolPointA;
             _sprite = new Sprite("Images/enemy.png");
         }
-        public Enemy(float x, float y, Color rayColor, Vector2 patrolPointA, Vector2 patrolPointB, Vector2 patrolPointC, char icon = ' ', ConsoleColor color = ConsoleColor.White)
-            : base(x, y, rayColor, icon, color)
+        public Enemy(float x, float y, Color rayColor, float collisionRadius, Vector2 patrolPointA, Vector2 patrolPointB, Vector2 patrolPointC, char icon = ' ', ConsoleColor color = ConsoleColor.White)
+            : base(x, y, rayColor, collisionRadius, icon, color)
         {
             _alertColor = Color.RED;
             PatrolPointA = patrolPointA;
@@ -126,8 +126,8 @@ namespace MathForGames
             _currentPoint = PatrolPointA;
             _sprite = new Sprite("Images/enemy.png");
         }
-        public Enemy(float x, float y, Color rayColor, Vector2 patrolPointA, Vector2 patrolPointB, Vector2 patrolPointC, Vector2 patrolPointD, char icon = ' ', ConsoleColor color = ConsoleColor.White)
-            : base(x, y, rayColor, icon, color)
+        public Enemy(float x, float y, Color rayColor, float collisionRadius, Vector2 patrolPointA, Vector2 patrolPointB, Vector2 patrolPointC, Vector2 patrolPointD, char icon = ' ', ConsoleColor color = ConsoleColor.White)
+            : base(x, y, rayColor, collisionRadius, icon, color)
         {
             _alertColor = Color.RED;
             PatrolPointA = patrolPointA;
@@ -213,6 +213,7 @@ namespace MathForGames
             }
             UpdatePatrolLocation();
             base.Update(deltaTime);
+            UpdateFacing();
         }
         public override void Draw()
         {

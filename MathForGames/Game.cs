@@ -189,13 +189,13 @@ namespace MathForGames
             Scene scene3 = new Scene();
 
             //Create the actors to add to our scene
-            Enemy enemy1 = new Enemy(1, 11.5f, Color.GREEN, new Vector2(15.5f, 23), new Vector2(30, 11.5f), new Vector2(15.5f, 1), new Vector2(1, 11.5f), '■', ConsoleColor.Green);
-            Enemy enemy2 = new Enemy(15.5f, 11.5f, Color.GREEN, new Vector2(1, 11.5f), new Vector2(30, 11.5f), '■', ConsoleColor.Green);
-            Enemy enemy3 = new Enemy(30, 11.5f, Color.GREEN, new Vector2(15.5f, 1), new Vector2(1, 11.5f), new Vector2(15.5f, 23), new Vector2(30, 11.5f), '■', ConsoleColor.Green);
-            Enemy enemy4 = new Enemy(15.5f, 1, Color.GREEN, new Vector2(1, 11.5f), new Vector2(15.5f, 23), new Vector2(30, 11.5f), new Vector2(15.5f, 1), '■', ConsoleColor.Green);
-            Enemy enemy5 = new Enemy(15.5f, 23, Color.GREEN, new Vector2(30, 11.5f), new Vector2(15.5f, 1), new Vector2(1, 11.5f), new Vector2(15.5f, 23), '■', ConsoleColor.Green);
-            Player player = new Player(1, 26, Color.BLUE, '@', ConsoleColor.Red);
-            Goal goal = new Goal(15.5f, 11.5f, Color.GREEN, player, 'G', ConsoleColor.Green);
+            Enemy enemy1 = new Enemy(1, 11.5f, Color.GREEN, 1, new Vector2(15.5f, 23), new Vector2(30, 11.5f), new Vector2(15.5f, 1), new Vector2(1, 11.5f), '■', ConsoleColor.Green);
+            Enemy enemy2 = new Enemy(15.5f, 11.5f, Color.GREEN, 1, new Vector2(1, 11.5f), new Vector2(30, 11.5f), '■', ConsoleColor.Green);
+            Enemy enemy3 = new Enemy(30, 11.5f, Color.GREEN, 1, new Vector2(15.5f, 1), new Vector2(1, 11.5f), new Vector2(15.5f, 23), new Vector2(30, 11.5f), '■', ConsoleColor.Green);
+            Enemy enemy4 = new Enemy(15.5f, 1, Color.GREEN, 1, new Vector2(1, 11.5f), new Vector2(15.5f, 23), new Vector2(30, 11.5f), new Vector2(15.5f, 1), '■', ConsoleColor.Green);
+            Enemy enemy5 = new Enemy(15.5f, 23, Color.GREEN, 1, new Vector2(30, 11.5f), new Vector2(15.5f, 1), new Vector2(1, 11.5f), new Vector2(15.5f, 23), '■', ConsoleColor.Green);
+            Player player = new Player(1, 26, Color.BLUE, 1, '@', ConsoleColor.Red);
+            Goal goal = new Goal(15.5f, 11.5f, Color.GREEN, 1, player, 'G', ConsoleColor.Green);
 
             //Initialize the enemies' starting values
             enemy1.Speed = 5;
