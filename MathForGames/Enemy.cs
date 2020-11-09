@@ -14,6 +14,7 @@ namespace MathForGames
     class Enemy : Actor
     {
         private Actor _target;
+        private Sprite _sprite;
         private Color _alertColor;
         private Vector2 _patrolPointA;
         private Vector2 _patrolPointB;
@@ -21,6 +22,7 @@ namespace MathForGames
         private Vector2 _patrolPointD;
         private Vector2 _currentPoint;
         private float _speed = 1;
+
 
         public float Speed
         {
@@ -33,7 +35,6 @@ namespace MathForGames
                 _speed = value;
             }
         }
-
         public Actor Target
         {
             get { return _target; }
@@ -51,7 +52,6 @@ namespace MathForGames
                 _patrolPointA = value;
             }
         }
-
         public Vector2 PatrolPointB
         {
             get
@@ -96,6 +96,7 @@ namespace MathForGames
             PatrolPointA = patrolPointA;
             PatrolPointB = patrolPointB;
             _currentPoint = PatrolPointA;
+            _sprite = new Sprite("Images/enemy.png");
         }
 
         /// <param name="x">Position on the x axis</param>
@@ -112,6 +113,7 @@ namespace MathForGames
             PatrolPointC = patrolPointA;
             PatrolPointD = patrolPointB;
             _currentPoint = PatrolPointA;
+            _sprite = new Sprite("Images/enemy.png");
         }
         public Enemy(float x, float y, Color rayColor, Vector2 patrolPointA, Vector2 patrolPointB, Vector2 patrolPointC, char icon = ' ', ConsoleColor color = ConsoleColor.White)
             : base(x, y, rayColor, icon, color)
@@ -122,6 +124,7 @@ namespace MathForGames
             PatrolPointC = patrolPointC;
             PatrolPointD = patrolPointA + new Vector2();
             _currentPoint = PatrolPointA;
+            _sprite = new Sprite("Images/enemy.png");
         }
         public Enemy(float x, float y, Color rayColor, Vector2 patrolPointA, Vector2 patrolPointB, Vector2 patrolPointC, Vector2 patrolPointD, char icon = ' ', ConsoleColor color = ConsoleColor.White)
             : base(x, y, rayColor, icon, color)
@@ -132,6 +135,7 @@ namespace MathForGames
             PatrolPointC = patrolPointC;
             PatrolPointD = patrolPointD;
             _currentPoint = PatrolPointA;
+            _sprite = new Sprite("Images/enemy.png");
         }
 
         /// <summary>
@@ -203,6 +207,11 @@ namespace MathForGames
             }
             UpdatePatrolLocation();
             base.Update(deltaTime);
+        }
+        public override void Draw()
+        {
+            _sprite.Draw(_localTransform);
+            base.Draw();
         }
     }
 }

@@ -14,16 +14,15 @@ namespace MathForGames
     class Actor
     {
         protected char _icon = ' ';
-        private float _rotate = 0;
+        private float _rotationAngle = 0;
         protected Vector2 _velocity;
-        protected Matrix3 _lolcalTransform = new Matrix3();
+        protected Matrix3 _localTransform = new Matrix3();
         protected Matrix3 _globalTransform = new Matrix3();
         private Matrix3 _translation = new Matrix3();
         private Matrix3 _rotation = new Matrix3();
         private Matrix3 _scale = new Matrix3();
         protected ConsoleColor _color;
         protected Color _rayColor;
-        protected Sprite _sprite;
         protected Actor[] _children = new Actor[0];
 
         public bool Started { get; private set; }
@@ -31,7 +30,11 @@ namespace MathForGames
         public Vector2 Forward
         {
             get { return new Vector2(_globalTransform.m11,_globalTransform.m21); }
-            
+            set
+            {
+                Vector2 lookPosition = LocalPosition + value.Normalized;
+                LookAt(lookPosition);
+            }
         }
 
         public Vector2 WorldPosition
@@ -43,7 +46,7 @@ namespace MathForGames
         {
             get
             {
-                return new Vector2(_lolcalTransform.m13,_lolcalTransform.m23);
+                return new Vector2(_localTransform.m13,_localTransform.m23);
             }
             set
             {
@@ -76,7 +79,6 @@ namespace MathForGames
             LocalPosition = new Vector2(x, y);
             _velocity = new Vector2();
             _color = color;
-            _sprite = new Sprite("Images/enemy.png");
         }
         
         /// <param name="x">Position on the x axis</param>
@@ -106,7 +108,6 @@ namespace MathForGames
 
             child.Parent = this;
         }
-
         public bool RemoveChild(Actor child)
         {
             if (child == null)
@@ -163,20 +164,14 @@ namespace MathForGames
             return childRemoved;
         }
 
-        public virtual void Start()
-        {
-            Started = true;
-        }
-
         public void SetTranslate(Vector2 position)
         {
             _translation.m13 = position.X;
             _translation.m23 = position.Y;
         }
-
-
         public void SetRotation(float radians)
         {
+            _rotationAngle = radians;
             _rotation.m11 = (float)Math.Cos(radians);
             _rotation.m12 = (float)Math.Sin(radians);
             _rotation.m21 = -(float)Math.Sin(radians);
@@ -184,31 +179,70 @@ namespace MathForGames
         }
         public void Rotate(float radians)
         {
-            _rotate += radians;
-            SetRotation(_rotate);
+            _rotationAngle += radians;
+            SetRotation(_rotationAngle);
         }
-        
         public void SetScale(float x,float y)
         {
             _scale.m11 = x;
             _scale.m22 = y;
         }
-        private void UpdateTransform()
+
+        /// <summary> 
+        /// Rotates the actor to face the given position 
+        /// </summary> 
+        /// <param name="position">The position the actor should be facing</param> 
+        public void LookAt(Vector2 position)
         {
-            _lolcalTransform =  _translation * _rotation * _scale;
+            //Find the direction that the actor should look in 
+            Vector2 direction = (position - LocalPosition).Normalized;
+
+            //Use the dotproduct to find the angle the actor needs to rotate 
+            float dotProd = Vector2.DotProduct(Forward, direction);
+            if (Math.Abs(dotProd) > 1)
+                return;
+            float angle = (float)Math.Acos(dotProd);
+
+            //Find a perpindicular vector to the direction 
+            Vector2 perp = new Vector2(direction.Y, -direction.X);
+
+            //Find the dot product of the perpindicular vector and the current forward 
+            float perpDot = Vector2.DotProduct(perp, Forward);
+
+            //If the result isn't 0, use it to change the sign of the angle to be either positive or negative 
+            if (perpDot != 0)
+                angle *= -perpDot / Math.Abs(perpDot);
+
+            Rotate(angle);
         }
 
+        private void UpdateTransform()
+        {
+            _localTransform =  _translation * _rotation * _scale;
+        }
+        private void UpdateFacing()
+        {
+            if (_velocity.Magnitude <= 0)
+                return;
+            Forward = Velocity.Normalized;
+        }
         public void UpdateGlobalTransform()
         {
             if (Parent != null)
             {
-                _globalTransform = Parent._globalTransform * _lolcalTransform;
+                _globalTransform = Parent._globalTransform * _localTransform;
 
             }
             else
             {
-                _globalTransform = _lolcalTransform;
+                _globalTransform = _localTransform;
             }
+        }
+
+
+        public virtual void Start()
+        {
+            Started = true;
         }
         public virtual void Update(float deltaTime)
         {
@@ -216,15 +250,12 @@ namespace MathForGames
             
             UpdateTransform();
             UpdateGlobalTransform();
-            Rotate(0.15f);
+            UpdateFacing();
             LocalPosition += _velocity * deltaTime;
         }
-
-
         public virtual void Draw()
         {
             //draws sprite and direction they are pointing
-            _sprite.Draw(_globalTransform);
             Raylib.DrawLine(
                 (int)(WorldPosition.X * 32),
                 (int)(WorldPosition.Y * 32),
@@ -247,7 +278,6 @@ namespace MathForGames
             //Reset console text color to be default color
             Console.ForegroundColor = Game.DefaultColor;
         }
-
         public virtual void End()
         {
             Started = false;

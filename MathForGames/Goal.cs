@@ -10,6 +10,7 @@ namespace MathForGames
     class Goal : Actor
     {
         private Actor _player;
+        private Sprite _sprite;
 
         /// <param name="x">Position on the x axis</param>
         /// <param name="y">Position on the y axis</param>
@@ -19,6 +20,7 @@ namespace MathForGames
             : base(x, y, icon, color)
         {
             _player = player;
+            _sprite = new Sprite("Images/goal.png");
         }
 
         /// <param name="x">Position on the x axis</param>
@@ -30,6 +32,7 @@ namespace MathForGames
             : base(x, y, rayColor, icon, color)
         {
             _player = player;
+            _sprite = new Sprite("Images/goal.png");
         }
 
         /// <summary>
@@ -57,6 +60,11 @@ namespace MathForGames
                 LocalPosition = new Vector2(Game.rand.Next(1,30), Game.rand.Next(1, 23));
             }
             base.Update(deltaTime);
+        }
+        public override void Draw()
+        {
+            _sprite.Draw(_globalTransform);
+            base.Draw();
         }
     }
 }

@@ -11,7 +11,6 @@ namespace MathForGames
         private Matrix3 _transform = new Matrix3();
         public Matrix3 World { get { return _transform; } }
         public bool Started { get; private set; }
-
         public Scene()
         {
             _actors = new Actor[0];
@@ -31,7 +30,6 @@ namespace MathForGames
             //Set old array to hold the values of the new array
             _actors = appendedArray;
         }
-
         public bool RemoveActor(int index)
         {
             //Check to see if the index is outside the bounds of our array
@@ -68,7 +66,6 @@ namespace MathForGames
 
             return actorRemoved;
         }
-
         public bool RemoveActor(Actor actor)
         {
             //Check to see if the actor was null
@@ -104,11 +101,11 @@ namespace MathForGames
             return actorRemoved;
         }
 
+
         public virtual void Start()
         {
             Started = true;
         }
-
         public virtual void Update(float deltaTime)
         {
             for (int i = 0; i < _actors.Length; i++)
@@ -119,7 +116,6 @@ namespace MathForGames
                 _actors[i].Update(deltaTime);
             }
         }
-
         public virtual void Draw()
         {
             for (int i = 0; i < _actors.Length; i++)
@@ -127,7 +123,6 @@ namespace MathForGames
                 _actors[i].Draw();
             }
         }
-
         public virtual void End()
         {
             for (int i = 0; i < _actors.Length; i++)

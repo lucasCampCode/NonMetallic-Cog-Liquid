@@ -12,6 +12,7 @@ namespace MathForGames
     class Player : Actor
     {
         private float _speed = 1;
+        private Sprite _sprite;
 
         public float Speed
         {
@@ -57,10 +58,13 @@ namespace MathForGames
             //Set the actors current velocity to be the a vector with the direction found scaled by the speed
             Velocity = new Vector2(xDirection, yDirection);
             Velocity = Velocity.Normalized * Speed;
-            
-            SetRotation(-(float)Math.Atan2(Velocity.Y, Velocity.X));
 
             base.Update(deltaTime);
+        }
+        public override void Draw()
+        {
+            _sprite.Draw(_localTransform);
+            base.Draw();
         }
     }
 }
