@@ -169,6 +169,14 @@ namespace MathForGames3D
         {
             _rotation = Matrix4.CreateRotationZ(radians);
         }
+        public void Rotate(float radiansX,float radiansY,float radiansZ)
+        {
+            _rotation = _rotation * (Matrix4.CreateRotationX(radiansX) * Matrix4.CreateRotationY(radiansY) * Matrix4.CreateRotationZ(radiansZ)); 
+        }
+        public void RotateX(float radians)
+        {
+            _rotation *= Matrix4.CreateRotationX(radians);
+        }
         public void RotateY(float radians)
         {
             _rotation *= Matrix4.CreateRotationY(radians);
@@ -177,10 +185,7 @@ namespace MathForGames3D
         {
             _rotation *= Matrix4.CreateRotationZ(radians);
         }
-        public void RotateX(float radians)
-        {
-            _rotation *= Matrix4.CreateRotationX(radians);
-        }
+        
         public void SetScale(Vector3 scale)
         {
             _scale = Matrix4.CreateScale(scale);

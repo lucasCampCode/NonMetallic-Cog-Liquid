@@ -155,9 +155,9 @@ namespace MathForGames3D
             _camera.type = CameraType.CAMERA_PERSPECTIVE;
 
             Scene scene1 = new Scene();
-            Planet sun = new Planet((0, 0, 0), (0.025f, 0, 0), 2, Color.YELLOW);
-            Planet earth = new Planet((5, 0, 0), (0, 0.025f,0), 1, Color.BLUE);
-            Planet moon = new Planet((2, 0, 0), (0, 0, 0.025f), 0.5f, Color.GRAY);
+            Planet sun = new Planet((0, 0, 0), (0, 0.025f, 0), 2, Color.YELLOW);
+            Planet earth = new Planet((5, 0, 0), (0, 0, 0), 1, Color.BLUE);
+            Planet moon = new Planet((2, 0, 0), (0, 0, 0), 0.5f, Color.GRAY);
             
             sun.AddChild(earth);
             earth.AddChild(moon);

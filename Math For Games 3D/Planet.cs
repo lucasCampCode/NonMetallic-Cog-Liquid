@@ -8,7 +8,7 @@ namespace MathForGames3D
 {
     class Planet : Actor
     {
-        private Vector3 _rotate= new Vector3();
+        private Vector3 _rotate = new Vector3();
 
         public Planet(Vector3 position,Vector3 rotation,float collisionRadius,Color color) : base(position.X,position.Y,position.Z,color,collisionRadius)
         {
@@ -18,9 +18,7 @@ namespace MathForGames3D
         }
         public override void Update(float deltaTime)
         {
-            RotateX(_rotate.X);
-            RotateY(_rotate.Y);
-            RotateZ(_rotate.Z);
+            Rotate(_rotate.X,_rotate.Y,_rotate.Z);
             base.Update(deltaTime);
         }
     }
