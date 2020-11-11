@@ -4,9 +4,12 @@ using System.Text;
 
 namespace MathLibrary
 {
-    class Matrix4
+    public class Matrix4
     {
-        public float m11, m12, m13, m14, m21, m22, m23, m24, m31, m32, m33, m34, m41, m42, m43, m44;
+        public float m11, m12, m13, m14, 
+                     m21, m22, m23, m24, 
+                     m31, m32, m33, m34,
+                     m41, m42, m43, m44;
 
         public Matrix4()
         {
@@ -73,6 +76,58 @@ namespace MathLibrary
                     lhs.m41 * rhs.m12 + lhs.m42 * rhs.m22 + lhs.m43 * rhs.m32 + lhs.m44 * rhs.m42,
                     lhs.m41 * rhs.m13 + lhs.m42 * rhs.m23 + lhs.m43 * rhs.m33 + lhs.m44 * rhs.m43,
                     lhs.m41 * rhs.m14 + lhs.m42 * rhs.m24 + lhs.m43 * rhs.m34 + lhs.m44 * rhs.m44
+                );
+        }
+        public static Matrix4 CreateTraslation(Vector3 position)
+        {
+            return new Matrix4
+                (
+                    1, 0, 0, position.X,
+                    0, 1, 0, position.Y,
+                    0, 0, 1, position.Z,
+                    0, 0, 0, 1
+                );
+        }
+        public static Matrix4 CreateScale(Vector3 scale)
+        {
+            return new Matrix4
+                (
+                    scale.X, 0, 0, 0,
+                    0, scale.Y, 0, 0,
+                    0, 0, scale.Z, 0,
+                    0, 0, 0, 1
+                );
+        }
+
+        public static Matrix4 CreateRotationX(float radians)
+        {
+            return new Matrix4
+                (
+                    1,0,0,0,
+                    0,(float)Math.Cos(radians),(float)Math.Sin(radians),0,
+                    0,-(float)Math.Sin(radians),(float)Math.Cos(radians),0,
+                    0,0,0,1
+                );
+        }
+        public static Matrix4 CreateRotationY(float radians)
+        {
+            return new Matrix4
+                (
+                    (float)Math.Cos(radians), 0, -(float)Math.Sin(radians), 0,
+                    0, 1, 0, 0,
+                    (float)Math.Sin(radians), 0, (float)Math.Cos(radians), 0,
+                    0, 0, 0, 1
+                );
+        }
+        public static Matrix4 CreateRotationZ(float radians)
+        {
+            return new Matrix4
+                (
+                    (float)Math.Cos(radians), (float)Math.Sin(radians),0,0,
+                    -(float)Math.Sin(radians), (float)Math.Cos(radians),0,0,
+                    0,0,1,0,
+                    0,0,0,1
+
                 );
         }
     }

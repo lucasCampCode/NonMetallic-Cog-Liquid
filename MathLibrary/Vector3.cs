@@ -108,7 +108,7 @@ namespace MathLibrary
 
         public static Vector3 operator -(Vector3 left, Vector3 right)
         {
-            return new Vector3(left.X - right.X, left.Y - right.Y, left.Z + right.Z);
+            return new Vector3(left.X - right.X, left.Y - right.Y, left.Z - right.Z);
         }
 
         public static Vector3 operator *(Vector3 left, float scalar)
@@ -126,6 +126,16 @@ namespace MathLibrary
         public static implicit operator Vector3((float, float, float) tuple)
         {
             return new Vector3(tuple.Item1, tuple.Item2, tuple.Item3);
+        }
+
+        public static Vector3 CrossProduct(Vector3 lhs,Vector3 rhs)
+        {
+            return new Vector3
+                (
+                    lhs.Y * rhs.Z - lhs.Z * rhs.Y,
+                    lhs.Z * rhs.X - lhs.X * rhs.Z,
+                    lhs.X * rhs.Y - lhs.Y * rhs.X
+                );
         }
     }
 }
