@@ -35,21 +35,9 @@ namespace MathForGames
             _sprite = new Sprite("Images/goal.png");
         }
 
-        /// <summary>
-        /// Checks to see if the player is in range of the goal.
-        /// </summary>
-        /// <returns></returns>
-        private bool CheckPlayerDistance()
+        public override void OnCollision(Actor other)
         {
-            float distance = (_player.LocalPosition - LocalPosition).Magnitude;
-            return distance <= 2;
-        }
-
-        public override void Update(float deltaTime)
-        {
-            Rotate(0.25f);
-            //If the player is in range of the goal, end the game
-            if (CheckPlayerDistance())
+            if (other is Player)
             {
                 if (Game.CurrentSceneIndex == Game.SceneLength - 1)
                 {
@@ -59,6 +47,13 @@ namespace MathForGames
                 _player.LocalPosition = new Vector2(1, 26);
                 LocalPosition = new Vector2(Game.rand.Next(1, 30), Game.rand.Next(1, 23));
             }
+            base.OnCollision(other);
+        }
+
+        public override void Update(float deltaTime)
+        {
+            Rotate(0.1f);
+            //If the player is in range of the goal, end the game
             base.Update(deltaTime);
         }
         public override void Draw()

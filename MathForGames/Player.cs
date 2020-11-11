@@ -50,14 +50,15 @@ namespace MathForGames
 
         public void Shoot()
         {
-            Bullet bullet = new Bullet(WorldPosition.X, WorldPosition.Y, 1);
+            Bullet bullet = new Bullet(WorldPosition.X, WorldPosition.Y, 0.20f);
             Game.GetCurrentScene().AddActor(bullet);
             bullet.Velocity = Forward * _bulletSpeed;
         }
         public override void OnCollision(Actor other)
         {
             Bullet bullet = other as Bullet;
-            if (bullet == null)
+            Goal goal = other as Goal;
+            if (bullet == null && goal == null)
                 Destroy();
             base.OnCollision(other);
         }
@@ -69,6 +70,16 @@ namespace MathForGames
                 + Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_D));
             int yDirection = -Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_W))
                 + Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_S));
+            int speed = -Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_LEFT_CONTROL)) +
+                Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_LEFT_SHIFT));
+            if (speed > 0 && Speed < 20)
+            {
+                Speed += 2;
+            }
+            else if(speed < 0 && Speed > 0)
+            {
+                Speed -= 2;
+            }
 
             if (Game.GetKeyPressed((int)KeyboardKey.KEY_SPACE))
                 Shoot();

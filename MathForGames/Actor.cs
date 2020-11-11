@@ -14,7 +14,6 @@ namespace MathForGames
     class Actor
     {
         protected char _icon = ' ';
-        private float _rotationAngle = 0;
         private float _collisionRadius;
         protected Vector2 _velocity;
         protected Matrix3 _localTransform = new Matrix3();
@@ -168,26 +167,19 @@ namespace MathForGames
 
         public void SetTranslate(Vector2 position)
         {
-            _translation.m13 = position.X;
-            _translation.m23 = position.Y;
+            _translation = Matrix3.CreateTraslation(position);
         }
         public void SetRotation(float radians)
         {
-            _rotationAngle = radians;
-            _rotation.m11 = (float)Math.Cos(radians);
-            _rotation.m12 = (float)Math.Sin(radians);
-            _rotation.m21 = -(float)Math.Sin(radians);
-            _rotation.m22 = (float)Math.Cos(radians);
+            _rotation = Matrix3.CreateRotation(radians);
         }
         public void Rotate(float radians)
         {
-            _rotationAngle += radians;
-            SetRotation(_rotationAngle);
+            _rotation *= Matrix3.CreateRotation(radians);
         }
         public void SetScale(float x, float y)
         {
-            _scale.m11 = x;
-            _scale.m22 = y;
+            _scale = Matrix3.CreateScale(x, y);
         }
 
         /// <summary> 
@@ -241,14 +233,10 @@ namespace MathForGames
         public void UpdateGlobalTransform()
         {
             if (Parent != null)
-            {
                 _globalTransform = Parent._globalTransform * _localTransform;
-
-            }
             else
-            {
                 _globalTransform = Game.GetCurrentScene().World * _localTransform;
-            }
+
             for (int i = 0; i < _children.Length; i++)
             {
                 _children[i].UpdateGlobalTransform();
@@ -286,14 +274,16 @@ namespace MathForGames
                 Color.WHITE
             );
 
+            Raylib.DrawCircleLines((int)(WorldPosition.X * 32),(int)(WorldPosition.Y * 32),_collisionRadius * 32,Color.GREEN);
+
             //Changes the color of the console text to be this actors color
             Console.ForegroundColor = _color;
 
             //Only draws the actor on the console if it is within the bounds of the window
-            if (LocalPosition.X >= 0 && LocalPosition.X < Console.WindowWidth
-                && LocalPosition.Y >= 0 && LocalPosition.Y < Console.WindowHeight)
+            if (WorldPosition.X >= 0 && WorldPosition.X < Console.WindowWidth
+                && WorldPosition.Y >= 0 && WorldPosition.Y < Console.WindowHeight)
             {
-                Console.SetCursorPosition((int)LocalPosition.X, (int)LocalPosition.Y);
+                Console.SetCursorPosition((int)WorldPosition.X, (int)WorldPosition.Y);
                 Console.Write(_icon);
             }
 

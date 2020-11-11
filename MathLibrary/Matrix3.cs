@@ -61,5 +61,37 @@ namespace MathLibrary
                     left.m31 * right.m13 + left.m32 * right.m23 + left.m33 * right.m33
                 );
         }
+        public static Matrix3 CreateRotation(float radians)
+        {
+            return new Matrix3((float)Math.Cos(radians),(float)Math.Sin(radians),0,
+                               -(float)Math.Sin(radians),(float)Math.Cos(radians),0,
+                               0,0,1);
+        }
+
+        public static Matrix3 CreateTraslation(Vector2 position)
+        {
+            return new Matrix3(1,0,position.X,
+                               0,1,position.Y,
+                               0,0,1);
+        }
+        public static Matrix3 CreateTraslation(float x,float y)
+        {
+            return new Matrix3(1, 0, x,
+                               0, 1, y,
+                               0, 0, 1);
+        }
+        
+        public static Matrix3 CreateScale(Vector2 scale)
+        {
+            return new Matrix3(scale.X, 0, 0,
+                               0, scale.Y, 0,
+                               0, 0, 1);
+        }
+        public static Matrix3 CreateScale(float x,float y)
+        {
+            return new Matrix3(x,0,0,
+                               0,y,0,
+                               0,0,1);
+        }
     } 
 }
