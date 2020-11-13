@@ -129,10 +129,19 @@ namespace MathLibrary
 
             return new Vector4(left.X * scalar, left.Y * scalar, left.Z * scalar, left.W * scalar);
         }
+        public static Vector4 operator *(float scalar, Vector4 left)
+        {
+
+            return new Vector4(left.X * scalar, left.Y * scalar, left.Z * scalar, left.W * scalar);
+        }
 
         public static Vector4 operator /(Vector4 left, float scalar)
         {
             return new Vector4(left.X / scalar, left.Y / scalar, left.Z / scalar, left.W / scalar);
+        }
+        public static Vector4 operator /(float scalar, Vector4 right)
+        {
+            return new Vector4(right.X / scalar, right.Y / scalar, right.Z / scalar, right.W / scalar);
         }
 
 

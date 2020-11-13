@@ -68,13 +68,13 @@ namespace MathLibrary
                                0,0,1);
         }
 
-        public static Matrix3 CreateTraslation(Vector2 position)
+        public static Matrix3 CreateTranslation(Vector2 position)
         {
             return new Matrix3(1,0,position.X,
                                0,1,position.Y,
                                0,0,1);
         }
-        public static Matrix3 CreateTraslation(float x,float y)
+        public static Matrix3 CreateTranslation(float x,float y)
         {
             return new Matrix3(1, 0, x,
                                0, 1, y,
@@ -92,6 +92,15 @@ namespace MathLibrary
             return new Matrix3(x,0,0,
                                0,y,0,
                                0,0,1);
+        }
+        public static Vector3 operator *(Matrix3 left, Vector3 right)
+        {
+            return new Vector3
+                (
+                    (left.m11 * right.X) + (left.m12 * right.Y) + (left.m13 * right.Z),
+                    (left.m21 * right.X) + (left.m22 * right.Y) + (left.m23 * right.Z),
+                    (left.m31 * right.X) + (left.m32 * right.Y) + (left.m33 * right.Z)
+                );
         }
     } 
 }

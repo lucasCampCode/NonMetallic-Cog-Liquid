@@ -101,6 +101,16 @@ namespace MathLibrary
             return (left.X * right.X) + (left.Y * right.Y) + (left.Z * right.Z);
         }
 
+        public static Vector3 CrossProduct(Vector3 lhs,Vector3 rhs)
+        {
+            return new Vector3
+                (
+                    lhs.Y * rhs.Z - lhs.Z * rhs.Y,
+                    lhs.Z * rhs.X - lhs.X * rhs.Z,
+                    lhs.X * rhs.Y - lhs.Y * rhs.X
+                );
+        }
+
         public static Vector3 operator +(Vector3 left, Vector3 right)
         {
             return new Vector3(left.X + right.X, left.Y + right.Y, left.Z + right.Z);
@@ -116,10 +126,19 @@ namespace MathLibrary
 
             return new Vector3(left.X * scalar, left.Y * scalar, left.Z * scalar);
         }
+        public static Vector3 operator *( float scalar,Vector3 right)
+        {
+
+            return new Vector3(right.X * scalar, right.Y * scalar, right.Z * scalar);
+        }
 
         public static Vector3 operator /(Vector3 left, float scalar)
         {
             return new Vector3(left.X / scalar, left.Y / scalar, left.Z / scalar);
+        }
+        public static Vector3 operator /( float scalar, Vector3 right)
+        {
+            return new Vector3(right.X / scalar, right.Y / scalar, right.Z / scalar);
         }
 
 
@@ -128,14 +147,6 @@ namespace MathLibrary
             return new Vector3(tuple.Item1, tuple.Item2, tuple.Item3);
         }
 
-        public static Vector3 CrossProduct(Vector3 lhs,Vector3 rhs)
-        {
-            return new Vector3
-                (
-                    lhs.Y * rhs.Z - lhs.Z * rhs.Y,
-                    lhs.Z * rhs.X - lhs.X * rhs.Z,
-                    lhs.X * rhs.Y - lhs.Y * rhs.X
-                );
-        }
+        
     }
 }

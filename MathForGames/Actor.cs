@@ -167,7 +167,7 @@ namespace MathForGames
 
         public void SetTranslate(Vector2 position)
         {
-            _translation = Matrix3.CreateTraslation(position);
+            _translation = Matrix3.CreateTranslation(position);
         }
         public void SetRotation(float radians)
         {

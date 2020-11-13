@@ -104,8 +104,8 @@ namespace MathLibrary
             return new Matrix4
                 (
                     1,0,0,0,
-                    0,(float)Math.Cos(radians),(float)Math.Sin(radians),0,
-                    0,-(float)Math.Sin(radians),(float)Math.Cos(radians),0,
+                    0,(float)Math.Cos(radians),-(float)Math.Sin(radians),0,
+                    0,(float)Math.Sin(radians),(float)Math.Cos(radians),0,
                     0,0,0,1
                 );
         }
@@ -113,9 +113,9 @@ namespace MathLibrary
         {
             return new Matrix4
                 (
-                    (float)Math.Cos(radians), 0, -(float)Math.Sin(radians), 0,
+                    (float)Math.Cos(radians), 0, (float)Math.Sin(radians), 0,
                     0, 1, 0, 0,
-                    (float)Math.Sin(radians), 0, (float)Math.Cos(radians), 0,
+                    -(float)Math.Sin(radians), 0, (float)Math.Cos(radians), 0,
                     0, 0, 0, 1
                 );
         }
@@ -123,11 +123,21 @@ namespace MathLibrary
         {
             return new Matrix4
                 (
-                    (float)Math.Cos(radians), (float)Math.Sin(radians),0,0,
-                    -(float)Math.Sin(radians), (float)Math.Cos(radians),0,0,
+                    (float)Math.Cos(radians), -(float)Math.Sin(radians),0,0,
+                    (float)Math.Sin(radians), (float)Math.Cos(radians),0,0,
                     0,0,1,0,
                     0,0,0,1
 
+                );
+        }
+        public static Vector4 operator *(Matrix4 left,Vector4 right)
+        {
+            return new Vector4
+                (
+                    (left.m11 * right.X) + (left.m12 * right.Y) + (left.m13 * right.Z) + (left.m14 * right.W),
+                    (left.m21 * right.X) + (left.m22 * right.Y) + (left.m23 * right.Z) + (left.m24 * right.W),
+                    (left.m31 * right.X) + (left.m32 * right.Y) + (left.m33 * right.Z) + (left.m34 * right.W),
+                    (left.m41 * right.X) + (left.m42 * right.Y) + (left.m43 * right.Z) + (left.m44 * right.W)
                 );
         }
     }

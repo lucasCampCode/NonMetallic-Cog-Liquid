@@ -100,10 +100,19 @@ namespace MathLibrary
 
             return new Vector2(left.X * scalar, left.Y * scalar);
         }
+        public static Vector2 operator *(float scalar,Vector2 right)
+        {
+
+            return new Vector2(right.X * scalar, right.Y * scalar);
+        }
 
         public static Vector2 operator /(Vector2 left, float scalar)
         {
             return new Vector2(left.X / scalar, left.Y / scalar);
+        }
+        public static Vector2 operator /( float scalar, Vector2 right)
+        {
+            return new Vector2(right.X / scalar, right.Y / scalar);
         }
 
         public static implicit operator Vector2((float, float) tuple)

@@ -165,6 +165,14 @@ namespace MathForGames3D
         {
             _translation = Matrix4.CreateTraslation(position);
         }
+        public void SetRotationX(float radians)
+        {
+            _rotation = Matrix4.CreateRotationX(radians);
+        }
+        public void SetRotationY(float radians)
+        {
+            _rotation = Matrix4.CreateRotationY(radians);
+        }
         public void SetRotationZ(float radians)
         {
             _rotation = Matrix4.CreateRotationZ(radians);
@@ -274,7 +282,7 @@ namespace MathForGames3D
         public virtual void Draw()
         {
             //draws sprite and direction they are pointing
-            Raylib.DrawSphere(new System.Numerics.Vector3(WorldPosition.X, WorldPosition.Y, WorldPosition.Z),_collisionRadius,_rayColor);
+            //Raylib.DrawSphere(new System.Numerics.Vector3(WorldPosition.X, WorldPosition.Y, WorldPosition.Z),_collisionRadius,_rayColor);
 
             Raylib.DrawLine3D
                 (
