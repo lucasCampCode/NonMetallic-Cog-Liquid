@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>Math_For_Games_3D</RootNamespace>
+    <RootNamespace>MathForGames3D</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

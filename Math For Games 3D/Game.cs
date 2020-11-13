@@ -156,12 +156,12 @@ namespace MathForGames3D
 
             Scene scene1 = new Scene();
             Planet sun = new Planet((0, 0, 0), (0, 0.025f, 0), 2, Color.YELLOW);
-            Planet earth = new Planet((5, 0, 0), (0, 0, 0), 1, Color.BLUE);
-            Planet moon = new Planet((2, 0, 0), (0, 0, 0), 0.5f, Color.GRAY);
+            Planet earth = new Planet((10, 0, 0), (0,0.0205f,0), 1, Color.BLUE);
+            Planet moon = new Planet((3, 0, 0), (0,0, 0), 0.5f, Color.GRAY);
             
             sun.AddChild(earth);
             earth.AddChild(moon);
-
+            earth.SetRotationZ(30);
             scene1.AddActor(sun);
             scene1.AddActor(moon);
             scene1.AddActor(earth);

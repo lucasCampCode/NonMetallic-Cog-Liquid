@@ -21,5 +21,11 @@ namespace MathForGames3D
             Rotate(_rotate.X,_rotate.Y,_rotate.Z);
             base.Update(deltaTime);
         }
+        public override void Draw()
+        {
+
+            Raylib.DrawSphere(new System.Numerics.Vector3(WorldPosition.X, WorldPosition.Y, WorldPosition.Z), _collisionRadius, _rayColor);
+            base.Draw();
+        }
     }
 }

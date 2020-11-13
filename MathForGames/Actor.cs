@@ -261,6 +261,7 @@ namespace MathForGames
 
             UpdateTransform();
             UpdateGlobalTransform();
+            UpdateFacing();
             LocalPosition += _velocity * deltaTime;
         }
         public virtual void Draw()

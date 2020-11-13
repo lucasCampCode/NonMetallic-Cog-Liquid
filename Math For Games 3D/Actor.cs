@@ -9,7 +9,7 @@ namespace MathForGames3D
     class Actor
     {
         protected char _icon = ' ';
-        private float _collisionRadius;
+        protected float _collisionRadius;
         protected Vector3 _velocity;
         protected Matrix4 _localTransform = new Matrix4();
         protected Matrix4 _globalTransform = new Matrix4();
@@ -245,6 +245,11 @@ namespace MathForGames3D
                 _globalTransform = Parent._globalTransform * _localTransform;
             else
                 _globalTransform = Game.GetCurrentScene().World * _localTransform;
+
+            for (int i = 0; i < _children.Length; i++)
+            {
+                _children[i].UpdateGlobalTransform();
+            }
         }
 
         public void Destroy()
@@ -270,30 +275,13 @@ namespace MathForGames3D
         {
             //draws sprite and direction they are pointing
             Raylib.DrawSphere(new System.Numerics.Vector3(WorldPosition.X, WorldPosition.Y, WorldPosition.Z),_collisionRadius,_rayColor);
-            
-            //Raylib.DrawLine(
-            //    (int)(WorldPosition.X),
-            //    (int)(WorldPosition.Y),
-            //    (int)(WorldPosition.X + Forward.X),
-            //    (int)(WorldPosition.Y + Forward.Y),
-            //    Color.WHITE
-            //);
 
-            //Raylib.DrawCircleLines((int)WorldPosition.X, (int)WorldPosition.Y, _collisionRadius, Color.GREEN);
-
-            ////Changes the color of the console text to be this actors color
-            //Console.ForegroundColor = _color;
-
-            ////Only draws the actor on the console if it is within the bounds of the window
-            //if (WorldPosition.X >= 0 && WorldPosition.X < Console.WindowWidth
-            //    && WorldPosition.Y >= 0 && WorldPosition.Y < Console.WindowHeight)
-            //{
-            //    Console.SetCursorPosition((int)WorldPosition.X, (int)WorldPosition.Y);
-            //    Console.Write(_icon);
-            //}
-
-            ////Reset console text color to be default color
-            //Console.ForegroundColor = Game.DefaultColor;
+            Raylib.DrawLine3D
+                (
+                new System.Numerics.Vector3(WorldPosition.X, WorldPosition.Y, WorldPosition.Z),
+                new System.Numerics.Vector3(WorldPosition.X + (Forward.X * 2.5f), WorldPosition.Y + (Forward.Y * 2.5f), WorldPosition.Z + (Forward.Z * 2.5f)),
+                Color.GREEN
+                );
         }
         public virtual void End()
         {
