@@ -10,7 +10,7 @@ namespace MathForGames3D
     {
         private Vector3 _rotate = new Vector3();
 
-        public Planet(Vector3 position,Vector3 rotation,float collisionRadius,Color color) : base(position.X,position.Y,position.Z,color,collisionRadius)
+        public Planet(Vector3 position,Vector3 rotation,Shape shape,float collisionRadius,Color color) : base(position.X,position.Y,position.Z,color,shape,collisionRadius)
         {
             _rotate.X = rotation.X;
             _rotate.Y = rotation.Y;
@@ -23,8 +23,7 @@ namespace MathForGames3D
         }
         public override void Draw()
         {
-
-            Raylib.DrawSphere(new System.Numerics.Vector3(WorldPosition.X, WorldPosition.Y, WorldPosition.Z), _collisionRadius, _rayColor);
+            DrawShape();
             base.Draw();
         }
     }

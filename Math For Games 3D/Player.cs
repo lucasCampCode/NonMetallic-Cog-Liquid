@@ -10,7 +10,6 @@ namespace MathForGames3D
     {
         private float _speed = 1;
         private float _bulletSpeed = 10;
-        private TankBody _body;
 
         public float Speed
         {
@@ -31,7 +30,6 @@ namespace MathForGames3D
         public Player(float x, float y,float z, float collisionRadius, char icon = ' ', ConsoleColor color = ConsoleColor.White)
             : base(x, y,z, collisionRadius, icon, color)
         {
-            _body = new TankBody(x, y, z, collisionRadius);
         }
 
         /// <param name="x">Position on the x axis</param>
@@ -39,15 +37,13 @@ namespace MathForGames3D
         /// <param name="rayColor">The color of the symbol that will appear when drawn to raylib</param>
         /// <param name="icon">The symbol that will appear when drawn</param>
         /// <param name="color">The color of the symbol that will appear when drawn to the console</param>
-        public Player(float x, float y,float z, Color rayColor, float collisionRadius, char icon = ' ', ConsoleColor color = ConsoleColor.White)
-            : base(x, y,z, rayColor, collisionRadius, icon, color)
+        public Player(float x, float y,float z, Color rayColor,Shape shape, float collisionRadius, char icon = ' ', ConsoleColor color = ConsoleColor.White)
+            : base(x, y,z, rayColor,shape, collisionRadius, icon, color)
         {
-            _body = new TankBody(x, y, z, collisionRadius);
         }
-        public Player(Vector3 position, Color rayColor, float collisionRadius, char icon = ' ', ConsoleColor color = ConsoleColor.White)
-            : base(position.X, position.Y, position.Z, rayColor, collisionRadius, icon, color)
+        public Player(Vector3 position, Color rayColor,Shape shape, float collisionRadius, char icon = ' ', ConsoleColor color = ConsoleColor.White)
+            : base(position.X, position.Y, position.Z, rayColor,shape, collisionRadius, icon, color)
         {
-            _body = new TankBody(position.X, position.Y, position.Z, collisionRadius);
         }
 
         public void Shoot()
@@ -61,7 +57,6 @@ namespace MathForGames3D
 
         public override void Start()
         {
-            this.AddChild(_body);
             base.Start();
         }
         public override void Update(float deltaTime)
@@ -90,15 +85,13 @@ namespace MathForGames3D
             Velocity = new Vector3(xDirection,0, yDirection);
             Velocity = Velocity.Normalized * Speed;
             if(Velocity.Magnitude != 0)
-                SetRotationY(-(float)Math.Atan2(Velocity.Z, Velocity.X));
+                SetRotationY((float)Math.Atan2(Velocity.Z, Velocity.X));
 
             base.Update(deltaTime);
-            _body.Update(deltaTime);
             UpdateFacing();
         }
         public override void Draw()
         {
-            _body.Draw();
             base.Draw();
         }
     }

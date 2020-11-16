@@ -6,6 +6,11 @@ using MathLibrary;
 
 namespace MathForGames3D
 {
+    enum Shape
+    {
+        SHPERE,
+        CUBE
+    }
     class Actor
     {
         protected char _icon = ' ';
@@ -18,6 +23,7 @@ namespace MathForGames3D
         private Matrix4 _scale = new Matrix4();
         protected ConsoleColor _color;
         protected Color _rayColor;
+        private Shape _shape;
         protected Actor[] _children = new Actor[0];
 
         public bool Started { get; private set; }
@@ -40,6 +46,8 @@ namespace MathForGames3D
         public Vector3 LocalPosition
         {
             get
+
+
             {
                 return new Vector3(_localTransform.m14, _localTransform.m24, _localTransform.m34);
             }
@@ -83,10 +91,11 @@ namespace MathForGames3D
         /// <param name="rayColor">The color of the symbol that will appear when drawn to raylib</param>
         /// <param name="icon">The symbol that will appear when drawn</param>
         /// <param name="color">The color of the symbol that will appear when drawn to the console</param>
-        public Actor(float x, float y,float z, Color rayColor, float collisionRadius, char icon = ' ', ConsoleColor color = ConsoleColor.White)
+        public Actor(float x, float y,float z, Color rayColor,Shape shape, float collisionRadius, char icon = ' ', ConsoleColor color = ConsoleColor.White)
             : this(x, y,z, collisionRadius, icon, color)
         {
             _rayColor = rayColor;
+            _shape = shape;
         }
 
         public void AddChild(Actor child)
@@ -279,11 +288,31 @@ namespace MathForGames3D
             UpdateGlobalTransform();
             LocalPosition += _velocity * deltaTime;
         }
+        public void DrawShape()
+        {
+            switch (_shape)
+            {
+                case Shape.SHPERE:
+                    Raylib.DrawSphere(new System.Numerics.Vector3(WorldPosition.X, WorldPosition.Y, WorldPosition.Z), _collisionRadius, _rayColor);
+                    break;
+                case Shape.CUBE:
+
+                    Raylib.DrawCube(new System.Numerics.Vector3(WorldPosition.X, WorldPosition.Y, WorldPosition.Z), 1,1,1, _rayColor);
+                    //Raylib.DrawModelEx(
+                    //            Raylib.LoadModelFromMesh(_tankBody),
+                    //            new System.Numerics.Vector3(WorldPosition.X, WorldPosition.Y + 1.2f, WorldPosition.Z),
+                    //            new System.Numerics.Vector3(0, 1, 0),
+                    //            _rotateBody * (float)(180 / Math.PI),
+                    //            new System.Numerics.Vector3(1, 1, 1),
+                    //            Color.LIME
+                    //          );
+                    break;
+            }
+        }
         public virtual void Draw()
         {
             //draws sprite and direction they are pointing
-            //Raylib.DrawSphere(new System.Numerics.Vector3(WorldPosition.X, WorldPosition.Y, WorldPosition.Z),_collisionRadius,_rayColor);
-
+            DrawShape();
             Raylib.DrawLine3D
                 (
                 new System.Numerics.Vector3(WorldPosition.X, WorldPosition.Y, WorldPosition.Z),

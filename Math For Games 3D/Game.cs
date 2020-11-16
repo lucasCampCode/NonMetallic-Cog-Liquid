@@ -155,10 +155,10 @@ namespace MathForGames3D
             _camera.type = CameraType.CAMERA_PERSPECTIVE;
 
             Scene scene1 = new Scene();
-            Player player1 = new Player((0,0,0),Color.BEIGE,2);
-            Planet sun = new Planet((0, 0, 0), (0, 0.025f, 0), 2, Color.YELLOW);
-            Planet earth = new Planet((10, 0, 0), (0,0.0205f,0), 1, Color.BLUE);
-            Planet moon = new Planet((3, 0, 0), (0,0, 0), 0.5f, Color.GRAY);
+            Player player1 = new Player((0,0,0),Color.BEIGE,Shape.CUBE,2);
+            Planet sun = new Planet((0, 0, 0), (0, 0.025f, 0),Shape.SHPERE, 2, Color.YELLOW);
+            Planet earth = new Planet((10, 0, 0), (0,0.0205f,0), Shape.SHPERE, 1, Color.BLUE);
+            Planet moon = new Planet((3, 0, 0), (0,0, 0), Shape.SHPERE, 0.5f, Color.GRAY);
 
             player1.Speed = 5;
             
