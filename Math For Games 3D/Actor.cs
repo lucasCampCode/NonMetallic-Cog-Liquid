@@ -13,6 +13,7 @@ namespace MathForGames3D
     }
     class Actor
     {
+        private Model _cube = Raylib.LoadModelFromMesh(Raylib.GenMeshCube(1, 1, 1));
         protected char _icon = ' ';
         protected float _collisionRadius;
         protected Vector3 _velocity;
@@ -212,29 +213,29 @@ namespace MathForGames3D
         /// Rotates the actor to face the given position 
         /// </summary> 
         /// <param name="position">The position the actor should be facing</param> 
-        //public void LookAt(Vector3 position)
-        //{
-        //    //Find the direction that the actor should look in 
-        //    Vector3 direction = (position - LocalPosition).Normalized;
+        public void LookAt(Vector3 position)
+        {
+            //Find the direction that the actor should look in 
+            Vector3 direction = (position - LocalPosition).Normalized;
 
-        //    //Use the dotproduct to find the angle the actor needs to rotate 
-        //    float dotProd = Vector3.DotProduct(Forward, direction);
-        //    if (Math.Abs(dotProd) > 1)
-        //        return;
-        //    float angle = (float)Math.Acos(dotProd);
+            //Use the dotproduct to find the angle the actor needs to rotate 
+            float dotProd = Vector3.DotProduct(Forward, direction);
+            if (Math.Abs(dotProd) > 1)
+                return;
+            float angle = (float)Math.Acos(dotProd);
 
-        //    //Find a perpindicular vector to the direction 
-        //    Vector3 perp = new Vector3(direction.Y, -direction.X, direction.Z);
+            //Find a perpindicular vector to the direction 
+            Vector3 perp = new Vector3(direction.Y, -direction.X, direction.Z);
 
-        //    //Find the dot product of the perpindicular vector and the current forward 
-        //    float perpDot = Vector3.DotProduct(perp, Forward);
+            //Find the dot product of the perpindicular vector and the current forward 
+            float perpDot = Vector3.DotProduct(perp, Forward);
 
-        //    //If the result isn't 0, use it to change the sign of the angle to be either positive or negative 
-        //    if (perpDot != 0)
-        //        angle *= -perpDot / Math.Abs(perpDot);
+            //If the result isn't 0, use it to change the sign of the angle to be either positive or negative 
+            if (perpDot != 0)
+                angle *= -perpDot / Math.Abs(perpDot);
 
-        //    RotateZ(angle);
-        //}
+            RotateZ(angle);
+        }
 
         public bool CheckCollision(Actor other)
         {
@@ -284,9 +285,26 @@ namespace MathForGames3D
         public virtual void Update(float deltaTime)
         {
             //Increase position by the current velocity
+            UpdateShape();
             UpdateTransform();
             UpdateGlobalTransform();
             LocalPosition += _velocity * deltaTime;
+        }
+        public void UpdateShape()
+        {
+            switch (_shape)
+            {
+                case Shape.SHPERE:
+                    break;
+                case Shape.CUBE:
+                    _cube.transform = new System.Numerics.Matrix4x4(_localTransform.m11, _localTransform.m12, _localTransform.m13, _localTransform.m14,
+                                                                    _localTransform.m21, _localTransform.m22, _localTransform.m23, _localTransform.m24,
+                                                                    _localTransform.m31, _localTransform.m32, _localTransform.m33, _localTransform.m34,
+                                                                    _localTransform.m41, _localTransform.m42, _localTransform.m43, _localTransform.m44);
+                    break;
+                default:
+                    break;
+            }
         }
         public void DrawShape()
         {
@@ -296,16 +314,13 @@ namespace MathForGames3D
                     Raylib.DrawSphere(new System.Numerics.Vector3(WorldPosition.X, WorldPosition.Y, WorldPosition.Z), _collisionRadius, _rayColor);
                     break;
                 case Shape.CUBE:
-
-                    Raylib.DrawCube(new System.Numerics.Vector3(WorldPosition.X, WorldPosition.Y, WorldPosition.Z), 1,1,1, _rayColor);
-                    //Raylib.DrawModelEx(
-                    //            Raylib.LoadModelFromMesh(_tankBody),
-                    //            new System.Numerics.Vector3(WorldPosition.X, WorldPosition.Y + 1.2f, WorldPosition.Z),
-                    //            new System.Numerics.Vector3(0, 1, 0),
-                    //            _rotateBody * (float)(180 / Math.PI),
-                    //            new System.Numerics.Vector3(1, 1, 1),
-                    //            Color.LIME
-                    //          );
+                    Raylib.DrawModel(_cube,
+                                     new System.Numerics.Vector3(0,0,0),
+                                     1.0f,
+                                     Color.LIME
+                                     );
+                    break;
+                default:
                     break;
             }
         }

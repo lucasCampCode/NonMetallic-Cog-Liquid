@@ -92,7 +92,7 @@ namespace MathForGames3D
         }
         public override void Draw()
         {
-            base.Draw();
+            DrawShape();
         }
     }
 }
