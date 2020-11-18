@@ -155,16 +155,16 @@ namespace MathForGames3D
             _camera.type = CameraType.CAMERA_PERSPECTIVE;
 
             Scene scene1 = new Scene();
-            Player player1 = new Player((0,0,0),Color.BEIGE,Shape.CUBE,2);
+            Player player1 = new Player((0,0,0),Color.BEIGE,Shape.NULL,2);
             Planet sun = new Planet((0, 0, 0), (0, 0.025f, 0),Shape.SHPERE, 2, Color.YELLOW);
             Planet earth = new Planet((10, 0, 0), (0,0.0205f,0), Shape.SHPERE, 1, Color.BLUE);
             Planet moon = new Planet((3, 0, 0), (0,0, 0), Shape.SHPERE, 0.5f, Color.GRAY);
 
             player1.Speed = 5;
-            
             sun.AddChild(earth);
             earth.AddChild(moon);
             earth.SetRotationZ(30);
+
             scene1.AddActor(player1);
             scene1.AddActor(sun);
             scene1.AddActor(moon);
@@ -174,6 +174,9 @@ namespace MathForGames3D
         }
         private void Update(float deltaTime)
         {
+            _camera.position = new System.Numerics.Vector3(0.0f, 20.0f, 20.0f);
+            _camera.target = new System.Numerics.Vector3(0.0f, 0.0f, 0.0f);
+
             if (!_scenes[_currentSceneIndex].Started)
                 _scenes[_currentSceneIndex].Start();
 

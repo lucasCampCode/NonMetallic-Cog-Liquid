@@ -9,11 +9,19 @@ namespace MathForGames3D
     enum Shape
     {
         SHPERE,
-        CUBE
+        CUBE,
+        CYLINDER,
+        TANKBODY,
+        TIRES,
+        NULL
     }
     class Actor
     {
         private Model _cube = Raylib.LoadModelFromMesh(Raylib.GenMeshCube(1, 1, 1));
+        private Model _cylinder = Raylib.LoadModelFromMesh(Raylib.GenMeshCylinder(2, 4, 10));
+        private Model _tankBody = Raylib.LoadModelFromMesh(Raylib.GenMeshCube(4, 1, 3));
+        private Model _tires = Raylib.LoadModelFromMesh(Raylib.GenMeshCylinder(0.5f, 1, 6));
+        private Model _null = Raylib.LoadModelFromMesh(Raylib.GenMeshPlane(.5f, .5f, 0, 0));
         protected char _icon = ' ';
         protected float _collisionRadius;
         protected Vector3 _velocity;
@@ -92,7 +100,7 @@ namespace MathForGames3D
         /// <param name="rayColor">The color of the symbol that will appear when drawn to raylib</param>
         /// <param name="icon">The symbol that will appear when drawn</param>
         /// <param name="color">The color of the symbol that will appear when drawn to the console</param>
-        public Actor(float x, float y,float z, Color rayColor,Shape shape, float collisionRadius, char icon = ' ', ConsoleColor color = ConsoleColor.White)
+        public Actor(float x, float y,float z, Color rayColor, Shape shape, float collisionRadius, char icon = ' ', ConsoleColor color = ConsoleColor.White)
             : this(x, y,z, collisionRadius, icon, color)
         {
             _rayColor = rayColor;
@@ -297,10 +305,34 @@ namespace MathForGames3D
                 case Shape.SHPERE:
                     break;
                 case Shape.CUBE:
-                    _cube.transform = new System.Numerics.Matrix4x4(_localTransform.m11, _localTransform.m12, _localTransform.m13, _localTransform.m14,
-                                                                    _localTransform.m21, _localTransform.m22, _localTransform.m23, _localTransform.m24,
-                                                                    _localTransform.m31, _localTransform.m32, _localTransform.m33, _localTransform.m34,
-                                                                    _localTransform.m41, _localTransform.m42, _localTransform.m43, _localTransform.m44);
+                    _cube.transform = new System.Numerics.Matrix4x4(_globalTransform.m11, _globalTransform.m12, _globalTransform.m13, _globalTransform.m14,
+                                                                    _globalTransform.m21, _globalTransform.m22, _globalTransform.m23, _globalTransform.m24,
+                                                                    _globalTransform.m31, _globalTransform.m32, _globalTransform.m33, _globalTransform.m34,
+                                                                    _globalTransform.m41, _globalTransform.m42, _globalTransform.m43, _globalTransform.m44);
+                    break;
+                case Shape.CYLINDER:
+                    _cylinder.transform = new System.Numerics.Matrix4x4(_globalTransform.m11, _globalTransform.m12, _globalTransform.m13, _globalTransform.m14,
+                                                                    _globalTransform.m21, _globalTransform.m22, _globalTransform.m23, _globalTransform.m24,
+                                                                    _globalTransform.m31, _globalTransform.m32, _globalTransform.m33, _globalTransform.m34,
+                                                                    _globalTransform.m41, _globalTransform.m42, _globalTransform.m43, _globalTransform.m44);
+                    break;
+                case Shape.TANKBODY:
+                    _tankBody.transform = new System.Numerics.Matrix4x4(_globalTransform.m11, _globalTransform.m12, _globalTransform.m13, _globalTransform.m14,
+                                                                    _globalTransform.m21, _globalTransform.m22, _globalTransform.m23, _globalTransform.m24,
+                                                                    _globalTransform.m31, _globalTransform.m32, _globalTransform.m33, _globalTransform.m34,
+                                                                    _globalTransform.m41, _globalTransform.m42, _globalTransform.m43, _globalTransform.m44);
+                    break;
+                case Shape.TIRES:
+                    _tires.transform = new System.Numerics.Matrix4x4(_globalTransform.m11, _globalTransform.m12, _globalTransform.m13, _globalTransform.m14,
+                                                                    _globalTransform.m21, _globalTransform.m22, _globalTransform.m23, _globalTransform.m24,
+                                                                    _globalTransform.m31, _globalTransform.m32, _globalTransform.m33, _globalTransform.m34,
+                                                                    _globalTransform.m41, _globalTransform.m42, _globalTransform.m43, _globalTransform.m44);
+                    break;
+                case Shape.NULL:
+                    _null.transform = new System.Numerics.Matrix4x4(_globalTransform.m11, _globalTransform.m12, _globalTransform.m13, _globalTransform.m14,
+                                                                    _globalTransform.m21, _globalTransform.m22, _globalTransform.m23, _globalTransform.m24,
+                                                                    _globalTransform.m31, _globalTransform.m32, _globalTransform.m33, _globalTransform.m34,
+                                                                    _globalTransform.m41, _globalTransform.m42, _globalTransform.m43, _globalTransform.m44);
                     break;
                 default:
                     break;
@@ -314,11 +346,19 @@ namespace MathForGames3D
                     Raylib.DrawSphere(new System.Numerics.Vector3(WorldPosition.X, WorldPosition.Y, WorldPosition.Z), _collisionRadius, _rayColor);
                     break;
                 case Shape.CUBE:
-                    Raylib.DrawModel(_cube,
-                                     new System.Numerics.Vector3(0,0,0),
-                                     1.0f,
-                                     Color.LIME
-                                     );
+                    Raylib.DrawModel(_cube, new System.Numerics.Vector3(0,0,0), 1.0f, _rayColor);
+                    break;
+                case Shape.CYLINDER:
+                    Raylib.DrawModel(_cylinder, new System.Numerics.Vector3(0, 0, 0), 1.0f, _rayColor);
+                    break;
+                case Shape.TANKBODY:
+                    Raylib.DrawModel(_tankBody, new System.Numerics.Vector3(0, 0, 0), 1.0f, _rayColor);
+                    break;
+                case Shape.TIRES:
+                    Raylib.DrawModel(_tires, new System.Numerics.Vector3(0, 0, 0), 1.0f, _rayColor);
+                    break;
+                case Shape.NULL:
+                    Raylib.DrawModel(_null, new System.Numerics.Vector3(0, 0, 0), 1.0f, _rayColor);
                     break;
                 default:
                     break;
