@@ -55,8 +55,6 @@ namespace MathForGames3D
         public Vector3 LocalPosition
         {
             get
-
-
             {
                 return new Vector3(_localTransform.m14, _localTransform.m24, _localTransform.m34);
             }
@@ -101,7 +99,7 @@ namespace MathForGames3D
         /// <param name="icon">The symbol that will appear when drawn</param>
         /// <param name="color">The color of the symbol that will appear when drawn to the console</param>
         public Actor(float x, float y,float z, Color rayColor, Shape shape, float collisionRadius, char icon = ' ', ConsoleColor color = ConsoleColor.White)
-            : this(x, y,z, collisionRadius, icon, color)
+            : this(x, y, z, collisionRadius, icon, color)
         {
             _rayColor = rayColor;
             _shape = shape;
@@ -368,12 +366,6 @@ namespace MathForGames3D
         {
             //draws sprite and direction they are pointing
             DrawShape();
-            Raylib.DrawLine3D
-                (
-                new System.Numerics.Vector3(WorldPosition.X, WorldPosition.Y, WorldPosition.Z),
-                new System.Numerics.Vector3(WorldPosition.X + (Forward.X * 2.5f), WorldPosition.Y + (Forward.Y * 2.5f), WorldPosition.Z + (Forward.Z * 2.5f)),
-                Color.GREEN
-                );
         }
         public virtual void End()
         {
