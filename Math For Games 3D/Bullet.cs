@@ -27,8 +27,8 @@ namespace MathForGames3D
 
         public override void Update(float deltaTime)
         {
-            if (WorldPosition.X < -1000 || WorldPosition.X > 1000
-                || WorldPosition.Y < -1000 || WorldPosition.Y > 1000)
+            if (WorldPosition.X < -100 || WorldPosition.X > 100
+                || WorldPosition.Y < -100 || WorldPosition.Y > 100)
                 Destroy();
 
             base.Update(deltaTime);
