@@ -61,7 +61,7 @@ namespace MathForGames3D
         {
             Bullet bullet = new Bullet(_barrel.WorldPosition.X, _barrel.WorldPosition.Y, _barrel.WorldPosition.Z, Color.WHITE,Shape.SHPERE, 0.20f);
             Game.GetCurrentScene().AddActor(bullet);
-            bullet.Velocity = Forward * _bulletSpeed;
+            bullet.Velocity = Forward * (_bulletSpeed + (Speed/2));
         }
         public override void OnCollision(Actor other)
         {
@@ -134,12 +134,14 @@ namespace MathForGames3D
                 Speed = 5;
             else { Speed = 10; }
 
-            if (Game.GetKeyPressed((int)KeyboardKey.KEY_SPACE))
+            if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON))
                 Shoot();
 
             //Set the actors current velocity to be the a vector with the direction found scaled by the speed
             Velocity = Forward * xDirection;
             Velocity = Velocity.Normalized * Speed;
+            //Acceleration = Forward * xDirection;
+
             if (rotate > 0)
                 RotateY(0.1f);
             else if (rotate < 0)

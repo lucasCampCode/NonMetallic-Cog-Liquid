@@ -24,7 +24,9 @@ namespace MathForGames3D
         private Model _null = Raylib.LoadModelFromMesh(Raylib.GenMeshPlane(.5f, .5f, 0, 0));
         protected char _icon = ' ';
         protected float _collisionRadius;
-        protected Vector3 _velocity;
+        private float maxSpeed = 40;
+        private Vector3 _acceleration = new Vector3();
+        private Vector3 _velocity = new Vector3();
         protected Matrix4 _localTransform = new Matrix4();
         protected Matrix4 _globalTransform = new Matrix4();
         private Matrix4 _translation = new Matrix4();
@@ -40,11 +42,11 @@ namespace MathForGames3D
         public Vector3 Forward
         {
             get { return new Vector3(_globalTransform.m11, _globalTransform.m21,_globalTransform.m31); }
-            //set
-            //{
-            //    Vector3 lookPosition = LocalPosition + value.Normalized;
-            //    LookAt(lookPosition);
-            //}
+            set
+            {
+                Vector3 lookPosition = LocalPosition + value.Normalized;
+                LookAt(lookPosition);
+            }
         }
 
         public Vector3 WorldPosition
@@ -75,6 +77,18 @@ namespace MathForGames3D
             set
             {
                 _velocity = value;
+            }
+        }
+
+        public Vector3 Acceleration
+        {
+            get
+            {
+                return _acceleration;
+            }
+            set
+            {
+                _acceleration = value;
             }
         }
 
@@ -231,7 +245,7 @@ namespace MathForGames3D
             float angle = (float)Math.Acos(dotProd);
 
             //Find a perpindicular vector to the direction 
-            Vector3 perp = new Vector3(direction.Y, -direction.X, direction.Z);
+            Vector3 perp = new Vector3(direction.Z, direction.Y, -direction.Z);
 
             //Find the dot product of the perpindicular vector and the current forward 
             float perpDot = Vector3.DotProduct(perp, Forward);
@@ -240,7 +254,7 @@ namespace MathForGames3D
             if (perpDot != 0)
                 angle *= -perpDot / Math.Abs(perpDot);
 
-            RotateZ(angle);
+            RotateY(angle);
         }
 
         public bool CheckCollision(Actor other)
@@ -294,6 +308,11 @@ namespace MathForGames3D
             UpdateShape();
             UpdateTransform();
             UpdateGlobalTransform();
+            Velocity += Acceleration;
+
+            if (Velocity.Magnitude > maxSpeed)
+                Velocity = Velocity.Normalized * maxSpeed;
+
             LocalPosition += _velocity * deltaTime;
         }
         public void UpdateShape()
