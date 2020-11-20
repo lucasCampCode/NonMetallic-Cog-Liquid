@@ -39,13 +39,13 @@ namespace MathForGames
         {
             if (other is Player)
             {
-                if (Game.CurrentSceneIndex == Game.SceneLength - 1)
+                if (Engine.CurrentSceneIndex == Engine.SceneLength - 1)
                 {
-                    Game.SetGameOver(true);
+                    GameManager.GameOver = true;
                 }
-                Game.SetCurrentScene(Game.CurrentSceneIndex + 1);
+                Engine.SetCurrentScene(Engine.CurrentSceneIndex + 1);
                 _player.LocalPosition = new Vector2(1, 26);
-                LocalPosition = new Vector2(Game.rand.Next(1, 30), Game.rand.Next(1, 23));
+                LocalPosition = new Vector2(Engine.rand.Next(1, 30), Engine.rand.Next(1, 23));
             }
             base.OnCollision(other);
         }

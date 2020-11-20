@@ -32,7 +32,7 @@ namespace raygamecsharp
         {
 
             //Create a new instance of the game class
-            Game game = new Game();
+            Engine game = new Engine();
 
             //Call run to begin the game.
             game.Run();

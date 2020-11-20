@@ -8,10 +8,9 @@ using Raylib_cs;
 
 namespace MathForGames
 {
-    class Game
+    class Engine
     {
         public static Random rand = new Random();
-        private static bool _gameOver = false;
         private static Scene[] _scenes;
         private static int _currentSceneIndex;
         public static int CurrentSceneIndex
@@ -28,10 +27,7 @@ namespace MathForGames
         /// Used to set the value of game over.
         /// </summary>
         /// <param name="value">If this value is true, the game will end</param>
-        public static void SetGameOver(bool value)
-        {
-            _gameOver = value;
-        }
+       
 
         /// <summary>
         /// Returns the scene at the index given.
@@ -167,7 +163,7 @@ namespace MathForGames
             return Raylib.IsKeyPressed((KeyboardKey)key);
         }
 
-        public Game()
+        public Engine()
         {
             _scenes = new Scene[0];
         }
@@ -295,7 +291,7 @@ namespace MathForGames
             Start();
 
             //Loops the game until either the game is set to be over or the window closes
-            while (!_gameOver && !Raylib.WindowShouldClose())
+            while (!GameManager.GameOver && !Raylib.WindowShouldClose())
             {
                 //Stores the current time between frames
                 float deltaTime = Raylib.GetFrameTime();

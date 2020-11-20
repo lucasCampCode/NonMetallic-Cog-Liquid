@@ -51,7 +51,7 @@ namespace MathForGames
         public void Shoot()
         {
             Bullet bullet = new Bullet(WorldPosition.X, WorldPosition.Y, 0.20f);
-            Game.GetCurrentScene().AddActor(bullet);
+            Engine.GetCurrentScene().AddActor(bullet);
             bullet.Velocity = Forward * _bulletSpeed;
         }
         public override void OnCollision(Actor other)
@@ -66,12 +66,12 @@ namespace MathForGames
         public override void Update(float deltaTime)
         {
             //Gets the player's input to determine which direction the actor will move in on each axis 
-            int xDirection = -Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_A))
-                + Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_D));
-            int yDirection = -Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_W))
-                + Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_S));
-            int speed = -Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_LEFT_CONTROL)) +
-                Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_LEFT_SHIFT));
+            int xDirection = -Convert.ToInt32(Engine.GetKeyDown((int)KeyboardKey.KEY_A))
+                + Convert.ToInt32(Engine.GetKeyDown((int)KeyboardKey.KEY_D));
+            int yDirection = -Convert.ToInt32(Engine.GetKeyDown((int)KeyboardKey.KEY_W))
+                + Convert.ToInt32(Engine.GetKeyDown((int)KeyboardKey.KEY_S));
+            int speed = -Convert.ToInt32(Engine.GetKeyDown((int)KeyboardKey.KEY_LEFT_CONTROL)) +
+                Convert.ToInt32(Engine.GetKeyDown((int)KeyboardKey.KEY_LEFT_SHIFT));
             if (speed > 0 && Speed < 20)
             {
                 Speed += 2;
@@ -81,7 +81,7 @@ namespace MathForGames
                 Speed -= 2;
             }
 
-            if (Game.GetKeyPressed((int)KeyboardKey.KEY_SPACE))
+            if (Engine.GetKeyPressed((int)KeyboardKey.KEY_SPACE))
                 Shoot();
 
             //Set the actors current velocity to be the a vector with the direction found scaled by the speed

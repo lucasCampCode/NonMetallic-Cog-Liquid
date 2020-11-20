@@ -235,7 +235,7 @@ namespace MathForGames
             if (Parent != null)
                 _globalTransform = Parent._globalTransform * _localTransform;
             else
-                _globalTransform = Game.GetCurrentScene().World * _localTransform;
+                _globalTransform = Engine.GetCurrentScene().World * _localTransform;
 
             for (int i = 0; i < _children.Length; i++)
             {
@@ -245,7 +245,7 @@ namespace MathForGames
 
         public void Destroy()
         {
-            Game.GetCurrentScene().RemoveActor(this);
+            Engine.GetCurrentScene().RemoveActor(this);
             if (Parent != null)
                 Parent.RemoveChild(this);
             End();
@@ -289,7 +289,7 @@ namespace MathForGames
             }
 
             //Reset console text color to be default color
-            Console.ForegroundColor = Game.DefaultColor;
+            Console.ForegroundColor = Engine.DefaultColor;
         }
         public virtual void End()
         {
