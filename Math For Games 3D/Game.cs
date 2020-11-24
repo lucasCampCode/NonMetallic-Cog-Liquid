@@ -10,6 +10,8 @@ namespace MathForGames3D
     {
         private static bool _gameover = false;
         private static Scene[] _scenes;
+        public Scene scene1 = new Scene();
+        private Player _player1;
         private Camera3D _camera = new Camera3D();
         private static int _currentSceneIndex;
         public static int CurrentSceneIndex { get { return _currentSceneIndex; } }
@@ -154,19 +156,20 @@ namespace MathForGames3D
             _camera.fovy = 45.0f;
             _camera.type = CameraType.CAMERA_PERSPECTIVE;
 
-            Scene scene1 = new Scene();
-            Player player1 = new Player((0,0,0),Color.BEIGE,Shape.NULL,2);
+            Goal target = new Goal(10,1,0,Color.BROWN,Shape.CUBE,1); 
 
-            player1.Speed = 5;
+            _player1 = new Player((0, 0, 0), Color.BEIGE, Shape.NULL, 2);
+            _player1.Speed = 5;
 
-            scene1.AddActor(player1);
+            scene1.AddActor(_player1);
+            scene1.AddActor(target);
             int startingSceneIndex = 0;
             startingSceneIndex = AddScene(scene1);
         }
         private void Update(float deltaTime)
         {
-            _camera.position = new System.Numerics.Vector3(0.0f, 20.0f, 20.0f);
-            _camera.target = new System.Numerics.Vector3(0.0f, 0.0f, 0.0f);
+            _camera.position = new System.Numerics.Vector3(_player1.WorldPosition.X,_player1.WorldPosition.Y + 20.0f,_player1.WorldPosition.Z + 20.0f);
+            _camera.target = new System.Numerics.Vector3(_player1.WorldPosition.X, _player1.WorldPosition.Y, _player1.WorldPosition.Z);
 
             if (!_scenes[_currentSceneIndex].Started)
                 _scenes[_currentSceneIndex].Start();

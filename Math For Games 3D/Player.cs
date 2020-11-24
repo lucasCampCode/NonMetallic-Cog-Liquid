@@ -10,11 +10,15 @@ namespace MathForGames3D
     {
         private float _speed = 1;
         private float _bulletSpeed = 20;
+        private float _turretRotationZ = 0;
+        private float _turretRotationY = 0;
         private Actor _tankBody;
         private Actor[] _leftTankTreads;
         private Actor[] _rightTankTreads;
-        private Actor _turret;
+        private Actor _turretZ;
+        private Actor _turretY;
         private Actor _barrel;
+        private Actor _supressor;
 
         public float Speed
         {
@@ -59,16 +63,17 @@ namespace MathForGames3D
 
         public void Shoot()
         {
-            Bullet bullet = new Bullet(_barrel.WorldPosition.X, _barrel.WorldPosition.Y, _barrel.WorldPosition.Z, Color.WHITE,Shape.SHPERE, 0.20f);
+            Bullet bullet = new Bullet(_supressor.WorldPosition.X, _supressor.WorldPosition.Y, _supressor.WorldPosition.Z, Color.WHITE,Shape.SHPERE, 0.20f);
             Game.GetCurrentScene().AddActor(bullet);
-            bullet.Velocity = Forward * (_bulletSpeed + (Speed/2));
+            bullet.Velocity = _turretZ.Forward * (_bulletSpeed + (Speed/2));
         }
         public override void OnCollision(Actor other)
         {
             base.OnCollision(other);
         }
 
-        public override void Start()
+
+        private void InitBody()
         {
             //initilizes body that the player moves
             _tankBody = new Actor(0, 1, 0, Color.LIME, Shape.TANKBODY, 1);
@@ -98,33 +103,76 @@ namespace MathForGames3D
                     _rightTankTreads[i] = new Actor(-2 + additive, -0.5f, 1.25f, Color.DARKGREEN, Shape.TIRES, 1);
                 additive += 1;
             }
-
-            _turret = new Actor(0, 0.25f, 0, Color.GREEN, Shape.TIRES, 1);
-            _barrel = new Actor(0,0.5f,0,Color.GREEN,Shape.CYLINDER,1);
+            _turretZ = new Actor(0, 2, 0, Raylib.Fade(Color.BLUE, 0),Shape.NULL, 0);
+            _turretY = new Actor(0, 0, 0, Color.GREEN, Shape.CYLINDER, 1);
+            _barrel = new Actor(.5f,0,0,Color.GREEN,Shape.CYLINDER,1);
+            _supressor = new Actor(5,0,0,Color.GREEN,Shape.CUBE,0.5f);
 
             _barrel.SetRotationZ((float)Math.PI / 2);
-            _turret.SetScale((2,1,2));
-            _barrel.SetScale((0.25f, 0.25f, 0.125f));
+            _turretY.SetScale((0.5f,0.25f,0.5f));
+            _barrel.SetScale((.5f,1,.5f));
+            _supressor.SetScale((2, 2, 2));
+            
 
-            for (int i = 0; i < _leftTankTreads.Length; i++)
-                _leftTankTreads[i].SetRotationX((float)Math.PI / 2);
-            for (int i = 0; i < _rightTankTreads.Length; i++)
-                _rightTankTreads[i].SetRotationX(-(float)Math.PI / 2);
 
             this.AddChild(_tankBody);
             for (int i = 0; i < _leftTankTreads.Length; i++)
+            {
+                _leftTankTreads[i].SetRotationX((float)Math.PI / 2);
                 _tankBody.AddChild(_leftTankTreads[i]);
+            }
             for (int i = 0; i < _rightTankTreads.Length; i++)
+            {
+                _rightTankTreads[i].SetRotationX(-(float)Math.PI / 2);
                 _tankBody.AddChild(_rightTankTreads[i]);
-            _tankBody.AddChild(_turret);
-            _turret.AddChild(_barrel);
+            }
+            _tankBody.AddChild(_turretY);
+            _turretY.AddChild(_turretZ);
+            _turretZ.AddChild(_barrel);
+            _turretZ.AddChild(_supressor);
+
+        }
+
+        private void UpdateBody(float deltaTime)
+        {
+            _tankBody.Update(deltaTime);
+
+            for (int i = 0; i < _leftTankTreads.Length; i++)
+                _leftTankTreads[i].Update(deltaTime);
+            for (int i = 0; i < _rightTankTreads.Length; i++)
+                _rightTankTreads[i].Update(deltaTime);
+            _turretZ.Update(deltaTime);
+            _turretY.Update(deltaTime);
+            _barrel.Update(deltaTime);
+            _supressor.Update(deltaTime);
+        }
+        private void DrawBody()
+        {
+            _tankBody.Draw();
+
+            for (int i = 0; i < _leftTankTreads.Length; i++)
+                _leftTankTreads[i].Draw();
+            for (int i = 0; i < _rightTankTreads.Length; i++)
+                _rightTankTreads[i].Draw();
+            _turretY.Draw();
+            _barrel.Draw();
+            _supressor.Draw();
+        }
+
+        public override void Start()
+        {
+            InitBody();
             base.Start();
         }
         public override void Update(float deltaTime)
         {
             //Gets the player's input to determine which direction the actor will move in on each axis 
-            int rotate = -Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_A))
+            int rotatePlayer = -Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_A))
                 + Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_D));
+            int rotateTurretY = -Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_LEFT))
+                + Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_RIGHT));
+            int rotateTurretZ = -Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_UP))
+                + Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_DOWN));
             int xDirection = Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_W))
                 + -Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_S));
 
@@ -134,17 +182,33 @@ namespace MathForGames3D
                 Speed = 5;
             else { Speed = 10; }
 
-            if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON))
+            if (Game.GetKeyDown((int)KeyboardKey.KEY_SPACE))
+                _bulletSpeed += 1;
+            else if (Raylib.IsKeyReleased(KeyboardKey.KEY_SPACE))
+            {
                 Shoot();
-
+                _bulletSpeed = 10;
+            }
+            _bulletSpeed = Math.Clamp(_bulletSpeed, 10, 100);
             //Set the actors current velocity to be the a vector with the direction found scaled by the speed
             Velocity = Forward * xDirection;
             Velocity = Velocity.Normalized * Speed;
             //Acceleration = Forward * xDirection;
 
-            if (rotate > 0)
+            if (rotateTurretY > 0)
+                _turretRotationY += 0.1f;
+            else if (rotateTurretY < 0)
+                _turretRotationY -= 0.1f;
+
+            if (rotateTurretZ > 0)
+                _turretRotationZ += 0.1f;
+            else if (rotateTurretZ < 0)
+                _turretRotationZ -= 0.1f;
+            
+            
+            if (rotatePlayer > 0)
                 RotateY(0.1f);
-            else if (rotate < 0)
+            else if (rotatePlayer < 0)
                 RotateY(-0.1f);
             if (xDirection > 0)
             {
@@ -161,28 +225,19 @@ namespace MathForGames3D
                     _rightTankTreads[i].RotateY(-0.2f);
             }
 
+            if (!OnGround())
+                Velocity += _gravity;
+
+            _turretRotationZ = Math.Clamp(_turretRotationZ, -(float)Math.PI / 2,0);
+            _turretY.SetRotationY(_turretRotationY);
+            _turretZ.SetRotationZ(_turretRotationZ);
 
             base.Update(deltaTime);
-            _tankBody.Update(deltaTime);
-
-            for (int i = 0; i < _leftTankTreads.Length; i++)
-                _leftTankTreads[i].Update(deltaTime);
-            for (int i = 0; i < _rightTankTreads.Length; i++)
-                _rightTankTreads[i].Update(deltaTime);
-            _turret.Update(deltaTime);
-            _barrel.Update(deltaTime);
-            UpdateFacing();
+            UpdateBody(deltaTime);
         }
         public override void Draw()
         {
-            _tankBody.Draw();
-
-            for (int i = 0; i < _leftTankTreads.Length; i++)
-                _leftTankTreads[i].Draw();
-            for (int i = 0; i < _rightTankTreads.Length; i++)
-                _rightTankTreads[i].Draw();
-            _turret.Draw();
-            _barrel.Draw();
+            DrawBody();
             DrawShape();
             Raylib.DrawLine3D
                 (

@@ -19,8 +19,9 @@ namespace MathForGames3D
         }
         public override void OnCollision(Actor other)
         {
-            //if (other is Enemy)
-                //other.Destroy();
+            Bullet bullet = other as Bullet;
+            if ((other is Enemy || other is Goal) && bullet == null)
+                other.Destroy();
 
             base.OnCollision(other);
         }
@@ -28,11 +29,13 @@ namespace MathForGames3D
         public override void Update(float deltaTime)
         {
             if (WorldPosition.X < -100 || WorldPosition.X > 100
-                || WorldPosition.Y < -100 || WorldPosition.Y > 100)
+                || WorldPosition.Y < 0 || WorldPosition.Y > 100)
                 Destroy();
 
+            if (!OnGround())
+                Velocity += _gravity;
+
             base.Update(deltaTime);
-            UpdateFacing();
         }
 
         public override void Draw()

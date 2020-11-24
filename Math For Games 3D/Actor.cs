@@ -25,6 +25,7 @@ namespace MathForGames3D
         protected char _icon = ' ';
         protected float _collisionRadius;
         private float maxSpeed = 40;
+        protected Vector3 _gravity = new Vector3(0,-0.2f,0);
         private Vector3 _acceleration = new Vector3();
         private Vector3 _velocity = new Vector3();
         protected Matrix4 _localTransform = new Matrix4();
@@ -42,11 +43,6 @@ namespace MathForGames3D
         public Vector3 Forward
         {
             get { return new Vector3(_globalTransform.m11, _globalTransform.m21,_globalTransform.m31); }
-            set
-            {
-                Vector3 lookPosition = LocalPosition + value.Normalized;
-                LookAt(lookPosition);
-            }
         }
 
         public Vector3 WorldPosition
@@ -229,34 +225,6 @@ namespace MathForGames3D
             _scale = Matrix4.CreateScale(scale);
         }
 
-        /// <summary> 
-        /// Rotates the actor to face the given position 
-        /// </summary> 
-        /// <param name="position">The position the actor should be facing</param> 
-        public void LookAt(Vector3 position)
-        {
-            //Find the direction that the actor should look in 
-            Vector3 direction = (position - LocalPosition).Normalized;
-
-            //Use the dotproduct to find the angle the actor needs to rotate 
-            float dotProd = Vector3.DotProduct(Forward, direction);
-            if (Math.Abs(dotProd) > 1)
-                return;
-            float angle = (float)Math.Acos(dotProd);
-
-            //Find a perpindicular vector to the direction 
-            Vector3 perp = new Vector3(direction.Z, direction.Y, -direction.Z);
-
-            //Find the dot product of the perpindicular vector and the current forward 
-            float perpDot = Vector3.DotProduct(perp, Forward);
-
-            //If the result isn't 0, use it to change the sign of the angle to be either positive or negative 
-            if (perpDot != 0)
-                angle *= -perpDot / Math.Abs(perpDot);
-
-            RotateY(angle);
-        }
-
         public bool CheckCollision(Actor other)
         {
             float distance = (other.WorldPosition - WorldPosition).Magnitude;
@@ -271,12 +239,7 @@ namespace MathForGames3D
         {
             _localTransform = _translation * _rotation * _scale;
         }
-        public void UpdateFacing()
-        {
-            if (_velocity.Magnitude <= 0)
-                return;
-            //Forward = Velocity.Normalized;
-        }
+        
         public void UpdateGlobalTransform()
         {
             if (Parent != null)
@@ -288,6 +251,14 @@ namespace MathForGames3D
             {
                 _children[i].UpdateGlobalTransform();
             }
+        }
+
+        public bool OnGround()
+        {
+            if (WorldPosition.Y <= Game.GetCurrentScene().World.m24)
+                return true;
+
+            return false;
         }
 
         public void Destroy()
@@ -308,7 +279,7 @@ namespace MathForGames3D
             UpdateShape();
             UpdateTransform();
             UpdateGlobalTransform();
-            Velocity += Acceleration;
+                Velocity += Acceleration;
 
             if (Velocity.Magnitude > maxSpeed)
                 Velocity = Velocity.Normalized * maxSpeed;
@@ -360,7 +331,7 @@ namespace MathForGames3D
             switch (_shape)
             {
                 case Shape.SHPERE:
-                    Raylib.DrawSphere(new System.Numerics.Vector3(WorldPosition.X, WorldPosition.Y, WorldPosition.Z), _collisionRadius, _rayColor);
+                    Raylib.DrawSphere(new System.Numerics.Vector3(WorldPosition.X, WorldPosition.Y, WorldPosition.Z), _collisionRadius, Raylib.Fade(_rayColor,50));
                     break;
                 case Shape.CUBE:
                     Raylib.DrawModel(_cube, new System.Numerics.Vector3(0,0,0), 1.0f, _rayColor);
