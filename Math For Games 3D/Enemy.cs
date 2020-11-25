@@ -11,5 +11,14 @@ namespace MathForGames3D
         {
             
         }
+        public override void OnCollision(Actor other)
+        {
+            if(other is Player)
+            {
+                other.Destroy();
+            }
+
+            base.OnCollision(other);
+        }
     }
 }

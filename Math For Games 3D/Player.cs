@@ -13,13 +13,14 @@ namespace MathForGames3D
         private float _turretRotationZ = 0;
         private float _turretRotationY = 0;
         private Actor _tankBody;
+        private Actor _tempActor;
+        private Actor[] _rotations = new Actor[50];
         private Actor[] _leftTankTreads;
         private Actor[] _rightTankTreads;
         private Actor _turretZ;
         private Actor _turretY;
         private Actor _barrel;
         private Actor _supressor;
-        private BoundingBox _collisionBox = new BoundingBox();
 
         public float Speed
         {
@@ -32,6 +33,8 @@ namespace MathForGames3D
                 _speed = value;
             }
         }
+
+        internal Actor[] Rotations { get => _rotations; set => _rotations = value; }
 
         /// <param name="x">Position on the x axis</param>
         /// <param name="y">Position on the y axis</param>
@@ -60,7 +63,6 @@ namespace MathForGames3D
         {
             _leftTankTreads = new Actor[5];
             _rightTankTreads = new Actor[5];
-            _collisionBox = new BoundingBox(new System.Numerics.Vector3(WorldPosition.X - 4, WorldPosition.Y, WorldPosition.Z - 4), new System.Numerics.Vector3(WorldPosition.X + 4, WorldPosition.Y + 4, WorldPosition.Z));
         }
 
         public void Shoot()
@@ -73,7 +75,15 @@ namespace MathForGames3D
         {
             base.OnCollision(other);
         }
-
+        
+        public void AddObjectToPlayer(int i, Actor actor)
+        {
+            _tempActor = new Collectible(WorldPosition.X - actor.WorldPosition.X,
+                                         WorldPosition.Y - actor.WorldPosition.Y,
+                                         WorldPosition.Z - actor.WorldPosition.Z,
+                                         actor.RayColor, actor.Shape, 1);
+            _rotations[i].AddChild(_tempActor);
+        }
 
         private void InitBody()
         {
@@ -91,6 +101,9 @@ namespace MathForGames3D
                 else
                     _leftTankTreads[i] = new Actor(-2 + additive, -0.5f, -1.25f, Color.DARKGREEN, Shape.TIRES, 0);
                 additive += 1;
+
+                _leftTankTreads[i].SetRotationX((float)Math.PI / 2);
+                _tankBody.AddChild(_leftTankTreads[i]);
             }
 
             //initilize right side of the tank treads
@@ -104,10 +117,25 @@ namespace MathForGames3D
                 else
                     _rightTankTreads[i] = new Actor(-2 + additive, -0.5f, 1.25f, Color.DARKGREEN, Shape.TIRES, 0);
                 additive += 1;
+
+                _rightTankTreads[i].SetRotationX(-(float)Math.PI / 2);
+                _tankBody.AddChild(_rightTankTreads[i]);
             }
+
+            for(int i = 0; i < _rotations.Length; i++)
+            {
+                
+                _rotations[i] = new Actor(0,0,0,0);
+
+                _rotations[i].SetRotationZ(Game.Random.Next(-1,1));
+                _rotations[i].SetRotationY(Game.Random.Next(-1, 1));
+
+                AddChild(_rotations[i]);
+            }
+
             _turretZ = new Actor(0, 2, 0, Raylib.Fade(Color.BLUE, 0),Shape.NULL, 0);
             _turretY = new Actor(0, 0, 0, Color.GREEN, Shape.CYLINDER, 0);
-            _barrel = new Actor(.5f,0,0,Color.GREEN,Shape.CYLINDER,0);
+            _barrel = new Actor(.5f,0,0,Raylib.Fade(Color.GREEN,0.75f),Shape.CYLINDER,0);
             _supressor = new Actor(5,0,0,Color.GREEN,Shape.CUBE,0);
 
             _barrel.SetRotationZ((float)Math.PI / 2);
@@ -117,17 +145,7 @@ namespace MathForGames3D
             
 
 
-            this.AddChild(_tankBody);
-            for (int i = 0; i < _leftTankTreads.Length; i++)
-            {
-                _leftTankTreads[i].SetRotationX((float)Math.PI / 2);
-                _tankBody.AddChild(_leftTankTreads[i]);
-            }
-            for (int i = 0; i < _rightTankTreads.Length; i++)
-            {
-                _rightTankTreads[i].SetRotationX(-(float)Math.PI / 2);
-                _tankBody.AddChild(_rightTankTreads[i]);
-            }
+            AddChild(_tankBody);
             _tankBody.AddChild(_turretY);
             _turretY.AddChild(_turretZ);
             _turretZ.AddChild(_barrel);
@@ -143,6 +161,13 @@ namespace MathForGames3D
                 _leftTankTreads[i].Update(deltaTime);
             for (int i = 0; i < _rightTankTreads.Length; i++)
                 _rightTankTreads[i].Update(deltaTime);
+            for (int i = 0; i < _rotations.Length; i++)
+            {
+                _rotations[i].Update(deltaTime);
+                for (int j = 0; j < _rotations[i].Children.Length; j++)
+                    _rotations[i].Children[j].Update(deltaTime);
+                
+            }
             _turretZ.Update(deltaTime);
             _turretY.Update(deltaTime);
             _barrel.Update(deltaTime);
@@ -156,6 +181,12 @@ namespace MathForGames3D
                 _leftTankTreads[i].Draw();
             for (int i = 0; i < _rightTankTreads.Length; i++)
                 _rightTankTreads[i].Draw();
+            for (int i = 0; i < _rotations.Length; i++)
+            {
+                _rotations[i].Draw();
+                for (int j = 0; j < _rotations[i].Children.Length; j++)
+                    _rotations[i].Children[j].Draw();
+            }
             _turretY.Draw();
             _barrel.Draw();
             _supressor.Draw();
@@ -199,27 +230,39 @@ namespace MathForGames3D
                 Shoot();
                 _bulletSpeed = 10;
             }
-            _bulletSpeed = Math.Clamp(_bulletSpeed, 10, 100);
-            //Set the actors current velocity to be the a vector with the direction found scaled by the speed
-            Velocity = Forward * xDirection;
-            Velocity = Velocity.Normalized * Speed;
-            //Acceleration = Forward * xDirection;
+            
 
             if (rotateTurretY > 0)
-                _turretRotationY += 0.1f;
+                _turretRotationY += 0.05f;
             else if (rotateTurretY < 0)
-                _turretRotationY -= 0.1f;
+                _turretRotationY -= 0.05f;
 
             if (rotateTurretZ > 0)
                 _turretRotationZ += 0.1f;
             else if (rotateTurretZ < 0)
                 _turretRotationZ -= 0.1f;
-            
-            
+
+
             if (rotatePlayer > 0)
+            {
                 RotateY(0.1f);
+                for (int i = 0; i < _rotations.Length; i++)
+                    _rotations[i].RotateY(-0.1f);
+                for (int i = 0; i < _leftTankTreads.Length; i++)
+                    _leftTankTreads[i].RotateY(0.2f);
+                for (int i = 0; i < _rightTankTreads.Length; i++)
+                    _rightTankTreads[i].RotateY(0.2f);
+            }
             else if (rotatePlayer < 0)
+            {
                 RotateY(-0.1f);
+                for (int i = 0; i < _rotations.Length; i++)
+                    _rotations[i].RotateY(0.1f);
+                for (int i = 0; i < _leftTankTreads.Length; i++)
+                    _leftTankTreads[i].RotateY(-0.2f);
+                for (int i = 0; i < _rightTankTreads.Length; i++)
+                    _rightTankTreads[i].RotateY(-0.2f);
+            }
             if (xDirection > 0)
             {
                 for (int i = 0; i < _leftTankTreads.Length; i++)
@@ -238,17 +281,24 @@ namespace MathForGames3D
             if (!OnGround())
                 Velocity += _gravity;
 
+            for (int i = 0; i < _rotations.Length; i++)
+            {
+                _rotations[i].RotateY(0.1f);
+                _rotations[i].RotateZ(0.05f);
+            }
+
             _turretRotationZ = Math.Clamp(_turretRotationZ, -(float)Math.PI / 2,0);
             _turretY.SetRotationY(_turretRotationY);
             _turretZ.SetRotationZ(_turretRotationZ);
+            _bulletSpeed = Math.Clamp(_bulletSpeed, 10, 100);
+            
+            //Set the actors current velocity to be the a vector with the direction found scaled by the speed
+            Velocity = Forward * xDirection;
+            Velocity = Velocity.Normalized * Speed;
+            //Acceleration = Forward * xDirection;
 
             base.Update(deltaTime);
             UpdateBody(deltaTime);
-        }
-
-        public void Attach(Actor other)
-        {
-
         }
 
         public override void Draw()

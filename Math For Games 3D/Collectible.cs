@@ -7,6 +7,7 @@ namespace MathForGames3D
 {
     class Collectible: Actor
     {
+        
         public Collectible(float x, float y, float z, Color rayColor, Shape shape, float collisionRadius) : base(x, y, z, rayColor, shape, collisionRadius)
         {
             Rotate((float)Math.PI/4,0, (float)Math.PI / 4);

@@ -8,6 +8,7 @@ namespace MathForGames3D
 {
     class Game
     {
+        private static Random _random = new Random();
         private static bool _gameover = false;
         private static bool _debug = false;
         private static Scene[] _scenes;
@@ -18,8 +19,8 @@ namespace MathForGames3D
         public static int CurrentSceneIndex { get { return _currentSceneIndex; } }
         public static ConsoleColor DefaultColor { get; set; } = ConsoleColor.White;
         public static bool GameOver { get { return _gameover; } set { _gameover = value; } }
-
         public static bool Debug { get => _debug; set => _debug = value; }
+        public static Random Random { get => _random; set => _random = value; }
 
         public static Scene GetScene(int index)
         {
@@ -159,11 +160,14 @@ namespace MathForGames3D
             _camera.fovy = 45.0f;
             _camera.type = CameraType.CAMERA_PERSPECTIVE;
 
-            Collectible target = new Collectible(10,1,0,Color.BROWN,Shape.CUBE,1); 
+            Collectible target = new Collectible(10,1,0,Color.BROWN,Shape.CUBE,1);
+            Enemy crush = new Enemy(0, 100, 0, Color.BLACK, Shape.CUBE, 5);
+            crush.SetScale((2.5f, 2.5f, 2.5f));
 
             _player1 = new Player((0, 0, 0), Color.BEIGE, Shape.NULL, 4);
             _player1.Speed = 5;
 
+            scene1.AddActor(crush);
             scene1.AddActor(_player1);
             scene1.AddActor(target);
             int startingSceneIndex = 0;

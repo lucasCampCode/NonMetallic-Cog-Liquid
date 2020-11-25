@@ -24,7 +24,7 @@ namespace MathForGames3D
         private Model _null = Raylib.LoadModelFromMesh(Raylib.GenMeshPlane(.5f, .5f, 1, 1));
         protected char _icon = ' ';
         protected float _collisionRadius;
-        private float maxSpeed = 40;
+        private float _maxSpeed = 40;
         protected Vector3 _gravity = new Vector3(0,-0.2f,0);
         private Vector3 _acceleration = new Vector3();
         private Vector3 _velocity = new Vector3();
@@ -36,7 +36,7 @@ namespace MathForGames3D
         protected ConsoleColor _color;
         protected Color _rayColor;
         private Shape _shape;
-        protected Actor[] _children = new Actor[0];
+        private Actor[] _children = new Actor[0];
 
         public bool Started { get; private set; }
         public Actor Parent { get; private set; }
@@ -88,6 +88,10 @@ namespace MathForGames3D
             }
         }
 
+        public Actor[] Children { get => _children; set => _children = value; }
+        public Shape Shape { get => _shape; }
+        public Color RayColor { get => _rayColor;  }
+
 
         /// <param name="x">Position on the x axis</param>
         /// <param name="y">Position on the y axis</param>
@@ -117,17 +121,17 @@ namespace MathForGames3D
 
         public void AddChild(Actor child)
         {
-            Actor[] tempArray = new Actor[_children.Length + 1];
+            Actor[] tempArray = new Actor[Children.Length + 1];
             //Copy the values from the old array to the new array
-            for (int i = 0; i < _children.Length; i++)
+            for (int i = 0; i < Children.Length; i++)
             {
-                tempArray[i] = _children[i];
+                tempArray[i] = Children[i];
             }
             //Set the last value in the new array to be the actor we want to add
-            tempArray[_children.Length] = child;
+            tempArray[Children.Length] = child;
 
             //Set old array to hold the values of the new array
-            _children = tempArray;
+            Children = tempArray;
 
             child.Parent = this;
         }
@@ -138,14 +142,14 @@ namespace MathForGames3D
 
             bool childRemoved = false;
 
-            Actor[] tempArray = new Actor[_children.Length - 1];
+            Actor[] tempArray = new Actor[Children.Length - 1];
             int j = 0;
             //Copy the values from the old array to the new array
-            for (int i = 0; i < _children.Length; i++)
+            for (int i = 0; i < Children.Length; i++)
             {
-                if (child != _children[i])
+                if (child != Children[i])
                 {
-                    tempArray[j] = _children[i];
+                    tempArray[j] = Children[i];
                     j++;
                 }
                 else
@@ -155,25 +159,25 @@ namespace MathForGames3D
             }
 
             //Set old array to hold the values of the new array
-            _children = tempArray;
+            Children = tempArray;
             child.Parent = null;
             return childRemoved;
         }
         public bool RemoveChild(int index)
         {
-            if (index < 0 || index > _children.Length)
+            if (index < 0 || index > Children.Length)
                 return false;
 
             bool childRemoved = false;
 
-            Actor[] tempArray = new Actor[_children.Length - 1];
+            Actor[] tempArray = new Actor[Children.Length - 1];
             int j = 0;
             //Copy the values from the old array to the new array
-            for (int i = 0; i < _children.Length; i++)
+            for (int i = 0; i < Children.Length; i++)
             {
                 if (index != i)
                 {
-                    tempArray[j] = _children[i];
+                    tempArray[j] = Children[i];
                     j++;
                 }
                 else
@@ -182,7 +186,7 @@ namespace MathForGames3D
                 }
             }
             //Set old array to hold the values of the new array
-            _children = tempArray;
+            Children = tempArray;
 
             return childRemoved;
         }
@@ -248,9 +252,9 @@ namespace MathForGames3D
             else
                 _globalTransform = Game.GetCurrentScene().World * _localTransform;
 
-            for (int i = 0; i < _children.Length; i++)
+            for (int i = 0; i < Children.Length; i++)
             {
-                _children[i].UpdateGlobalTransform();
+                Children[i].UpdateGlobalTransform();
             }
         }
 
@@ -282,8 +286,8 @@ namespace MathForGames3D
             UpdateGlobalTransform();
                 Velocity += Acceleration;
 
-            if (Velocity.Magnitude > maxSpeed)
-                Velocity = Velocity.Normalized * maxSpeed;
+            if (Velocity.Magnitude > _maxSpeed)
+                Velocity = Velocity.Normalized * _maxSpeed;
 
             LocalPosition += _velocity * deltaTime;
         }

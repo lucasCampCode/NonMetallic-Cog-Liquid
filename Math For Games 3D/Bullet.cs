@@ -25,14 +25,22 @@ namespace MathForGames3D
         }
         public override void OnCollision(Actor other)
         {
+            Actor[] collected = _player.Rotations;
             Bullet bullet = other as Bullet;
             if (other is Enemy && bullet == null)
                 other.Destroy();
 
             if (other is Collectible)
             {
-                _player.Attach(other);
-
+                other.LocalPosition = (Game.Random.Next(-10, 10),Game.Random.Next(1,3), Game.Random.Next(-10, 10));
+                for (int i = 0; i < collected.Length; i++)
+                {
+                    if (collected[i].Children.Length < 1)
+                    {
+                        _player.AddObjectToPlayer(i,other);
+                        break;
+                    }
+                }
             }
 
 
