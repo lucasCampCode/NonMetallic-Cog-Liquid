@@ -21,7 +21,7 @@ namespace MathForGames3D
         private Model _cylinder = Raylib.LoadModelFromMesh(Raylib.GenMeshCylinder(2, 4, 10));
         private Model _tankBody = Raylib.LoadModelFromMesh(Raylib.GenMeshCube(4, 1, 3));
         private Model _tires = Raylib.LoadModelFromMesh(Raylib.GenMeshCylinder(0.5f, 1, 6));
-        private Model _null = Raylib.LoadModelFromMesh(Raylib.GenMeshPlane(.5f, .5f, 0, 0));
+        private Model _null = Raylib.LoadModelFromMesh(Raylib.GenMeshPlane(.5f, .5f, 1, 1));
         protected char _icon = ' ';
         protected float _collisionRadius;
         private float maxSpeed = 40;
@@ -225,8 +225,9 @@ namespace MathForGames3D
             _scale = Matrix4.CreateScale(scale);
         }
 
-        public bool CheckCollision(Actor other)
+        public virtual bool CheckCollision(Actor other)
         {
+
             float distance = (other.WorldPosition - WorldPosition).Magnitude;
             return distance <= _collisionRadius + other._collisionRadius;
         }
@@ -354,12 +355,19 @@ namespace MathForGames3D
         }
         public virtual void Draw()
         {
-            //draws sprite and direction they are pointing
             DrawShape();
+            Debug();
         }
         public virtual void End()
         {
             Started = false;
+        }
+        public virtual void Debug()
+        {
+            if (Game.Debug)
+            {
+            Raylib.DrawSphere(new System.Numerics.Vector3(WorldPosition.X, WorldPosition.Y, WorldPosition.Z), _collisionRadius, Raylib.Fade(Color.BLUE, 0.5f));
+            }
         }
     }
 }

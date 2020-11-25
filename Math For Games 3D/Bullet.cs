@@ -7,6 +7,7 @@ namespace MathForGames3D
 {
     class Bullet : Actor
     {
+        private Player _player;
         public Bullet(float x, float y,float z, float collisionRadius, char icon = ' ', ConsoleColor color = ConsoleColor.White)
             : base(x, y,z, collisionRadius, icon, color)
         {
@@ -17,11 +18,23 @@ namespace MathForGames3D
         {
 
         }
+        public Bullet(float x, float y, float z, Color raycolor, Shape shape, float collisionRadius, Player holder, char icon = ' ', ConsoleColor color = ConsoleColor.White)
+           : base(x, y, z, raycolor, shape, collisionRadius, icon, color)
+        {
+            _player = holder;
+        }
         public override void OnCollision(Actor other)
         {
             Bullet bullet = other as Bullet;
-            if ((other is Enemy || other is Goal) && bullet == null)
+            if (other is Enemy && bullet == null)
                 other.Destroy();
+
+            if (other is Collectible)
+            {
+                _player.Attach(other);
+
+            }
+
 
             base.OnCollision(other);
         }

@@ -19,6 +19,7 @@ namespace MathForGames3D
         private Actor _turretY;
         private Actor _barrel;
         private Actor _supressor;
+        private BoundingBox _collisionBox = new BoundingBox();
 
         public float Speed
         {
@@ -59,11 +60,12 @@ namespace MathForGames3D
         {
             _leftTankTreads = new Actor[5];
             _rightTankTreads = new Actor[5];
+            _collisionBox = new BoundingBox(new System.Numerics.Vector3(WorldPosition.X - 4, WorldPosition.Y, WorldPosition.Z - 4), new System.Numerics.Vector3(WorldPosition.X + 4, WorldPosition.Y + 4, WorldPosition.Z));
         }
 
         public void Shoot()
         {
-            Bullet bullet = new Bullet(_supressor.WorldPosition.X, _supressor.WorldPosition.Y, _supressor.WorldPosition.Z, Color.WHITE,Shape.SHPERE, 0.20f);
+            Bullet bullet = new Bullet(_supressor.WorldPosition.X, _supressor.WorldPosition.Y, _supressor.WorldPosition.Z, Color.WHITE,Shape.SHPERE, 0.2f,this);
             Game.GetCurrentScene().AddActor(bullet);
             bullet.Velocity = _turretZ.Forward * (_bulletSpeed + (Speed/2));
         }
@@ -83,11 +85,11 @@ namespace MathForGames3D
             for(int i = 0; i < _leftTankTreads.Length; i++)
             {
                 if (i == 0)
-                    _leftTankTreads[i] = new Actor(-2 + additive, 0, -1.25f, Color.DARKGREEN, Shape.TIRES, 1);
+                    _leftTankTreads[i] = new Actor(-2 + additive, 0, -1.25f, Color.DARKGREEN, Shape.TIRES, 0);
                 else if (i == _leftTankTreads.Length - 1)
-                    _leftTankTreads[i] = new Actor(-2 + additive, 0, -1.25f, Color.DARKGREEN, Shape.TIRES, 1);
+                    _leftTankTreads[i] = new Actor(-2 + additive, 0, -1.25f, Color.DARKGREEN, Shape.TIRES, 0);
                 else
-                    _leftTankTreads[i] = new Actor(-2 + additive, -0.5f, -1.25f, Color.DARKGREEN, Shape.TIRES, 1);
+                    _leftTankTreads[i] = new Actor(-2 + additive, -0.5f, -1.25f, Color.DARKGREEN, Shape.TIRES, 0);
                 additive += 1;
             }
 
@@ -96,17 +98,17 @@ namespace MathForGames3D
             for (int i = 0; i < _rightTankTreads.Length; i++)
             {
                 if (i == 0)
-                    _rightTankTreads[i] = new Actor(-2 + additive, 0, 1.25f, Color.DARKGREEN, Shape.TIRES, 1);
+                    _rightTankTreads[i] = new Actor(-2 + additive, 0, 1.25f, Color.DARKGREEN, Shape.TIRES, 0);
                 else if (i == _rightTankTreads.Length - 1)
-                    _rightTankTreads[i] = new Actor(-2 + additive, 0, 1.25f, Color.DARKGREEN, Shape.TIRES, 1);
+                    _rightTankTreads[i] = new Actor(-2 + additive, 0, 1.25f, Color.DARKGREEN, Shape.TIRES, 0);
                 else
-                    _rightTankTreads[i] = new Actor(-2 + additive, -0.5f, 1.25f, Color.DARKGREEN, Shape.TIRES, 1);
+                    _rightTankTreads[i] = new Actor(-2 + additive, -0.5f, 1.25f, Color.DARKGREEN, Shape.TIRES, 0);
                 additive += 1;
             }
             _turretZ = new Actor(0, 2, 0, Raylib.Fade(Color.BLUE, 0),Shape.NULL, 0);
-            _turretY = new Actor(0, 0, 0, Color.GREEN, Shape.CYLINDER, 1);
-            _barrel = new Actor(.5f,0,0,Color.GREEN,Shape.CYLINDER,1);
-            _supressor = new Actor(5,0,0,Color.GREEN,Shape.CUBE,0.5f);
+            _turretY = new Actor(0, 0, 0, Color.GREEN, Shape.CYLINDER, 0);
+            _barrel = new Actor(.5f,0,0,Color.GREEN,Shape.CYLINDER,0);
+            _supressor = new Actor(5,0,0,Color.GREEN,Shape.CUBE,0);
 
             _barrel.SetRotationZ((float)Math.PI / 2);
             _turretY.SetScale((0.5f,0.25f,0.5f));
@@ -176,6 +178,14 @@ namespace MathForGames3D
             int xDirection = Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_W))
                 + -Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_S));
 
+            if (Raylib.IsKeyReleased(KeyboardKey.KEY_F2))
+            {
+                if (Game.Debug)
+                    Game.Debug = false;
+                else
+                    Game.Debug = true;
+            }
+
             if (Game.GetKeyDown((int)KeyboardKey.KEY_LEFT_CONTROL))
                 Speed = 20;
             else if (Game.GetKeyDown((int)KeyboardKey.KEY_LEFT_SHIFT))
@@ -235,6 +245,12 @@ namespace MathForGames3D
             base.Update(deltaTime);
             UpdateBody(deltaTime);
         }
+
+        public void Attach(Actor other)
+        {
+
+        }
+
         public override void Draw()
         {
             DrawBody();
@@ -245,6 +261,7 @@ namespace MathForGames3D
                 new System.Numerics.Vector3(WorldPosition.X + (Forward.X * 5f), WorldPosition.Y + (Forward.Y * 5f), WorldPosition.Z + (Forward.Z * 5f)),
                 Color.GREEN
                 );
+            base.Draw();
         }
         public override void End()
         {
