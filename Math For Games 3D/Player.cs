@@ -9,12 +9,13 @@ namespace MathForGames3D
     class Player : Actor
     {
         private float _speed = 1;
-        private float _bulletSpeed = 20;
+        private int _cubesCollected;
+        private float _bulletSpeed = 10;
         private float _turretRotationZ = 0;
         private float _turretRotationY = 0;
         private Actor _tankBody;
         private Actor _tempActor;
-        private Actor[] _rotations = new Actor[50];
+        private Actor[] _rotations = new Actor[100];
         private Actor[] _leftTankTreads;
         private Actor[] _rightTankTreads;
         private Actor _turretZ;
@@ -35,6 +36,8 @@ namespace MathForGames3D
         }
 
         internal Actor[] Rotations { get => _rotations; set => _rotations = value; }
+        public int CubesCollected { get => _cubesCollected; set => _cubesCollected = value; }
+        public float BulletSpeed { get => _bulletSpeed; }
 
         /// <param name="x">Position on the x axis</param>
         /// <param name="y">Position on the y axis</param>
@@ -127,13 +130,12 @@ namespace MathForGames3D
                 
                 _rotations[i] = new Actor(0,0,0,0);
 
-                _rotations[i].SetRotationZ(Game.Random.Next(-1,1));
-                _rotations[i].SetRotationY(Game.Random.Next(-1, 1));
+                _rotations[i].Rotate(Game.Random.Next(-6,6),0,Game.Random.Next(-6,6));
 
                 AddChild(_rotations[i]);
             }
 
-            _turretZ = new Actor(0, 2, 0, Raylib.Fade(Color.BLUE, 0),Shape.NULL, 0);
+            _turretZ = new Actor(0, 2, 0, Raylib.Fade(Color.BLUE, 0.5f),Shape.NULL, 0);
             _turretY = new Actor(0, 0, 0, Color.GREEN, Shape.CYLINDER, 0);
             _barrel = new Actor(.5f,0,0,Raylib.Fade(Color.GREEN,0.75f),Shape.CYLINDER,0);
             _supressor = new Actor(5,0,0,Color.GREEN,Shape.CUBE,0);
@@ -209,12 +211,26 @@ namespace MathForGames3D
             int xDirection = Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_W))
                 + -Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_S));
 
+            if (Raylib.IsKeyReleased(KeyboardKey.KEY_F1))
+            {
+                if (Game.ShowControls)
+                    Game.ShowControls = false;
+                else
+                    Game.ShowControls = true;
+            }
             if (Raylib.IsKeyReleased(KeyboardKey.KEY_F2))
             {
                 if (Game.Debug)
                     Game.Debug = false;
                 else
                     Game.Debug = true;
+            }
+            if (Raylib.IsKeyReleased(KeyboardKey.KEY_F3))
+            {
+                if (Game.PlayerInfo)
+                    Game.PlayerInfo = false;
+                else
+                    Game.PlayerInfo = true;
             }
 
             if (Game.GetKeyDown((int)KeyboardKey.KEY_LEFT_CONTROL))
@@ -246,22 +262,26 @@ namespace MathForGames3D
             if (rotatePlayer > 0)
             {
                 RotateY(0.1f);
+
                 for (int i = 0; i < _rotations.Length; i++)
                     _rotations[i].RotateY(-0.1f);
-                for (int i = 0; i < _leftTankTreads.Length; i++)
-                    _leftTankTreads[i].RotateY(0.2f);
-                for (int i = 0; i < _rightTankTreads.Length; i++)
-                    _rightTankTreads[i].RotateY(0.2f);
-            }
-            else if (rotatePlayer < 0)
-            {
-                RotateY(-0.1f);
-                for (int i = 0; i < _rotations.Length; i++)
-                    _rotations[i].RotateY(0.1f);
+
                 for (int i = 0; i < _leftTankTreads.Length; i++)
                     _leftTankTreads[i].RotateY(-0.2f);
                 for (int i = 0; i < _rightTankTreads.Length; i++)
                     _rightTankTreads[i].RotateY(-0.2f);
+            }
+            else if (rotatePlayer < 0)
+            {
+                RotateY(-0.1f);
+
+                for (int i = 0; i < _rotations.Length; i++)
+                    _rotations[i].RotateY(0.05f);
+
+                for (int i = 0; i < _leftTankTreads.Length; i++)
+                    _leftTankTreads[i].RotateY(0.2f);
+                for (int i = 0; i < _rightTankTreads.Length; i++)
+                    _rightTankTreads[i].RotateY(0.2f);
             }
             if (xDirection > 0)
             {
@@ -283,10 +303,18 @@ namespace MathForGames3D
 
             for (int i = 0; i < _rotations.Length; i++)
             {
-                _rotations[i].RotateY(0.1f);
-                _rotations[i].RotateZ(0.05f);
-            }
+                if (i % 5 == 0)
+                    _rotations[i].RotateY(0.05f);
+                else if (i % 5 == 1)
+                    _rotations[i].RotateY(0.025f);
+                else if (i % 5 == 2)
+                    _rotations[i].RotateY(0.1f);
+                else if (i % 5 == 3)
+                    _rotations[i].RotateY(0.035f);
+                else if (i % 5 == 4)
+                    _rotations[i].RotateY(0.075f);
 
+            }
             _turretRotationZ = Math.Clamp(_turretRotationZ, -(float)Math.PI / 2,0);
             _turretY.SetRotationY(_turretRotationY);
             _turretZ.SetRotationZ(_turretRotationZ);
@@ -297,6 +325,14 @@ namespace MathForGames3D
             Velocity = Velocity.Normalized * Speed;
             //Acceleration = Forward * xDirection;
 
+            if (WorldPosition.X > 47)
+                Velocity.X = -1;
+            else if (WorldPosition.X < -47)
+                Velocity.X = 1;
+            if (WorldPosition.Z > 47)
+                Velocity.Z = -1;
+            else if (WorldPosition.Z < -47)
+                Velocity.Z = 1;
             base.Update(deltaTime);
             UpdateBody(deltaTime);
         }

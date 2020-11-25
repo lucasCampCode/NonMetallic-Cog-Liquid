@@ -26,9 +26,6 @@ namespace MathForGames3D
         public override void OnCollision(Actor other)
         {
             Actor[] collected = _player.Rotations;
-            Bullet bullet = other as Bullet;
-            if (other is Enemy && bullet == null)
-                other.Destroy();
 
             if (other is Collectible)
             {
@@ -37,6 +34,7 @@ namespace MathForGames3D
                 {
                     if (collected[i].Children.Length < 1)
                     {
+                        _player.CubesCollected += 1;
                         _player.AddObjectToPlayer(i,other);
                         break;
                     }

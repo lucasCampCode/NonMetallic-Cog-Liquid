@@ -9,18 +9,30 @@ namespace MathForGames3D
     class Game
     {
         private static Random _random = new Random();
+        private int _time = 0;
+        private int _seconds = 0;
+        private int _minutes = 0;
         private static bool _gameover = false;
         private static bool _debug = false;
+        private static bool _showControls = false;
+        private static bool _playerInfo = false;
         private static Scene[] _scenes;
         public Scene scene1 = new Scene();
+        private Scene scene2 = new Scene();
+        private Collectible _target;
         private Player _player1;
         private Camera3D _camera = new Camera3D();
         private static int _currentSceneIndex;
+
         public static int CurrentSceneIndex { get { return _currentSceneIndex; } }
         public static ConsoleColor DefaultColor { get; set; } = ConsoleColor.White;
+
         public static bool GameOver { get { return _gameover; } set { _gameover = value; } }
-        public static bool Debug { get => _debug; set => _debug = value; }
         public static Random Random { get => _random; set => _random = value; }
+
+        public static bool Debug { get => _debug; set => _debug = value; }
+        public static bool ShowControls { get => _showControls; set => _showControls = value; }
+        public static bool PlayerInfo { get => _playerInfo; set => _playerInfo = value; }
 
         public static Scene GetScene(int index)
         {
@@ -154,44 +166,108 @@ namespace MathForGames3D
         {
             Raylib.InitWindow(1600, 900, "Math For Games");
             Raylib.SetTargetFPS(60);
-            _camera.position = new System.Numerics.Vector3(0.0f,20.0f,20.0f);
+            _camera.position = new System.Numerics.Vector3(0.0f, 20.0f, 20.0f);
             _camera.target = new System.Numerics.Vector3(0.0f, 0.0f, 0.0f);
             _camera.up = new System.Numerics.Vector3(0.0f, 1.0f, 0.0f);
             _camera.fovy = 45.0f;
             _camera.type = CameraType.CAMERA_PERSPECTIVE;
 
-            Collectible target = new Collectible(10,1,0,Color.BROWN,Shape.CUBE,1);
-            Enemy crush = new Enemy(0, 100, 0, Color.BLACK, Shape.CUBE, 5);
-            crush.SetScale((2.5f, 2.5f, 2.5f));
+            _target = new Collectible(10, 1, 0, Color.BROWN, Shape.CUBE, 1);
 
             _player1 = new Player((0, 0, 0), Color.BEIGE, Shape.NULL, 4);
             _player1.Speed = 5;
 
-            scene1.AddActor(crush);
             scene1.AddActor(_player1);
-            scene1.AddActor(target);
+            scene1.AddActor(_target);
+            scene2.AddActor(_player1);
             int startingSceneIndex = 0;
             startingSceneIndex = AddScene(scene1);
+            AddScene(scene2);
         }
         private void Update(float deltaTime)
         {
-            _camera.position = new System.Numerics.Vector3(_player1.WorldPosition.X,_player1.WorldPosition.Y + 20.0f,_player1.WorldPosition.Z + 20.0f);
+            _time = (int)Raylib.GetTime();
+            
+            if(_time % 1 == 0)
+            {
+                _seconds += 1;
+            }
+
+            if (_seconds > 60)
+            {
+                _minutes += 1;
+                _seconds = 0;
+            }
+
+            _camera.position = new System.Numerics.Vector3(_player1.WorldPosition.X, _player1.WorldPosition.Y + 20.0f, _player1.WorldPosition.Z + 20.0f);
             _camera.target = new System.Numerics.Vector3(_player1.WorldPosition.X, _player1.WorldPosition.Y, _player1.WorldPosition.Z);
 
             if (!_scenes[_currentSceneIndex].Started)
                 _scenes[_currentSceneIndex].Start();
+            
 
             _scenes[_currentSceneIndex].Update(deltaTime);
         }
         private void Draw()
         {
             Raylib.BeginDrawing();
-            Raylib.BeginMode3D(_camera);
-            Raylib.ClearBackground(Color.DARKGRAY);
 
+            Raylib.BeginMode3D(_camera);
+
+            Raylib.ClearBackground(Color.DARKGRAY);
             _scenes[_currentSceneIndex].Draw();
-            Raylib.DrawGrid(50,1.0f);
+            Raylib.DrawGrid(100, 1);
+            Raylib.DrawPlane(new System.Numerics.Vector3(0, 0, 0), new System.Numerics.Vector2(100,100), Raylib.Fade(Color.GRAY, 0.75f));
+
             Raylib.EndMode3D();
+
+            Raylib.DrawText("Cubes collected: " + _player1.CubesCollected, (int)Raylib.GetWorldToScreen(new System.Numerics.Vector3(_player1.WorldPosition.X, _player1.WorldPosition.Y + 5, _player1.WorldPosition.Z), _camera).X - Raylib.MeasureText("Cubes collected: " + _player1.CubesCollected, 20) / 2, (int)Raylib.GetWorldToScreen(new System.Numerics.Vector3(_player1.WorldPosition.X, _player1.WorldPosition.Y + 5, _player1.WorldPosition.Z), _camera).Y, 20, Color.BLACK);
+
+            Raylib.DrawText("seconds:"+ _time, Raylib.GetScreenWidth()/2 - Raylib.MeasureText("seconds:" + _time, 20)/2, 5, 20, Color.BLACK);
+            Raylib.DrawText("minutes:" + _minutes, Raylib.GetScreenWidth() / 2 - Raylib.MeasureText("minutes:" + _minutes, 20) / 2, 25, 20, Color.BLACK);
+            if (ShowControls)
+            {
+                Raylib.DrawText("press F1 to not show controls", Raylib.GetScreenWidth() - Raylib.MeasureText("press F1 to not show controls", 20), 5, 20, Color.BLACK);
+                Raylib.DrawText("w to move tank forward", 3, 5, 20, Color.BLACK);
+                Raylib.DrawText("s to move tank backwards", 3, 25, 20, Color.BLACK);
+                Raylib.DrawText("a to rotate tank left", 3, 45, 20, Color.BLACK);
+                Raylib.DrawText("d to rotate tank right", 3, 65, 20, Color.BLACK);
+
+                Raylib.DrawText("up arrow to raise cannon", 3, 85 + 10, 20, Color.BLACK);
+                Raylib.DrawText("down arrow to lower cannon", 3, 105 + 10, 20, Color.BLACK);
+                Raylib.DrawText("left arrow to rotate cannon left", 3, 125 + 10, 20, Color.BLACK);
+                Raylib.DrawText("right arrow to rotate cannon right", 3, 145 + 10, 20, Color.BLACK);
+
+
+                Raylib.DrawText("shift to move slowly", 3, 165 + 20, 20, Color.BLACK);
+                Raylib.DrawText("control to move quickly", 3, 185 + 20, 20, Color.BLACK);
+
+                Raylib.DrawText("hold space to charge shot", 3, 205 + 30, 20, Color.BLACK);
+                Raylib.DrawText("realese space to shoot", 3, 225 + 30, 20, Color.BLACK);
+            }
+            else
+                Raylib.DrawText("press F1 to show controls", Raylib.GetScreenWidth() - Raylib.MeasureText("press F1 to show controls", 20), 5, 20, Color.BLACK);
+            if (Debug)
+            {
+                Raylib.DrawText("press F2 to not show collisionSpheres", Raylib.GetScreenWidth() - Raylib.MeasureText("press F3 to not show collisionSpheres", 20), 25, 20, Color.BLACK);
+            }
+            else
+                Raylib.DrawText("press F2 to show collisionSpheres", Raylib.GetScreenWidth() - Raylib.MeasureText("press F3 to show collisionSpheres", 20), 25, 20, Color.BLACK);
+            if (PlayerInfo)
+            {
+                Raylib.DrawText("press F3 to not show Player Info", Raylib.GetScreenWidth() - Raylib.MeasureText("press F3 to not show Player Info", 20), 45, 20, Color.BLACK);
+                
+                Raylib.DrawText("player position x:" + _player1.WorldPosition.X, 3, Raylib.GetScreenHeight() - 140, 20, Color.BLACK);
+                Raylib.DrawText("player position y:" + _player1.WorldPosition.Y, 3, Raylib.GetScreenHeight() - 120, 20, Color.BLACK);
+                Raylib.DrawText("player position z:" + _player1.WorldPosition.Z, 3, Raylib.GetScreenHeight() - 100, 20, Color.BLACK);
+                Raylib.DrawText("collectible position x:" + _target.WorldPosition.X, 3, Raylib.GetScreenHeight() - 80, 20, Color.BLACK);
+                Raylib.DrawText("collectible position x:" + _target.WorldPosition.Y, 3, Raylib.GetScreenHeight() - 60, 20, Color.BLACK);
+                Raylib.DrawText("collectible position x:" + _target.WorldPosition.Z, 3, Raylib.GetScreenHeight() - 40, 20, Color.BLACK);
+                Raylib.DrawText("bullets launch speed:" + _player1.BulletSpeed, 3, Raylib.GetScreenHeight() - 20, 20, Color.BLACK);
+            }
+            else
+                Raylib.DrawText("press F3 to show Player Info", Raylib.GetScreenWidth() - Raylib.MeasureText("press F3 to show Player Info", 20), 45, 20, Color.BLACK);
+
             Raylib.EndDrawing();
         }
         private void End()
@@ -203,7 +279,7 @@ namespace MathForGames3D
         {
 
         }
-        
+
         public void Run()
         {
             Start();

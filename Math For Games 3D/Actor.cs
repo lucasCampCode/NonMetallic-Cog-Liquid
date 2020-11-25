@@ -370,7 +370,10 @@ namespace MathForGames3D
         {
             if (Game.Debug)
             {
-            Raylib.DrawSphere(new System.Numerics.Vector3(WorldPosition.X, WorldPosition.Y, WorldPosition.Z), _collisionRadius, Raylib.Fade(Color.BLUE, 0.5f));
+                Raylib.DrawSphere(new System.Numerics.Vector3(WorldPosition.X, WorldPosition.Y, WorldPosition.Z), _collisionRadius, Raylib.Fade(Color.BLUE, 0.5f));
+                Raylib.DrawLine3D(new System.Numerics.Vector3(WorldPosition.X, WorldPosition.Y, WorldPosition.Z),
+                                  new System.Numerics.Vector3(WorldPosition.X + (Forward.X*5) , WorldPosition.Y + (Forward.Y *5), WorldPosition.Z + (Forward.Z*5)),
+                                  Color.PURPLE);
             }
         }
     }
