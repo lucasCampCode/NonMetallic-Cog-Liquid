@@ -9,8 +9,7 @@ namespace MathForGames3D
     class Game
     {
         private static Random _random = new Random();
-        private int _time = 0;
-        private int _seconds = 0;
+        private float _seconds = 0;
         private int _minutes = 0;
         private static bool _gameover = false;
         private static bool _debug = false;
@@ -186,12 +185,8 @@ namespace MathForGames3D
         }
         private void Update(float deltaTime)
         {
-            _time = (int)Raylib.GetTime();
-            
-            if(_time % 1 == 0)
-            {
-                _seconds += 1;
-            }
+
+            _seconds += 1 * deltaTime;
 
             if (_seconds > 60)
             {
@@ -223,7 +218,7 @@ namespace MathForGames3D
 
             Raylib.DrawText("Cubes collected: " + _player1.CubesCollected, (int)Raylib.GetWorldToScreen(new System.Numerics.Vector3(_player1.WorldPosition.X, _player1.WorldPosition.Y + 5, _player1.WorldPosition.Z), _camera).X - Raylib.MeasureText("Cubes collected: " + _player1.CubesCollected, 20) / 2, (int)Raylib.GetWorldToScreen(new System.Numerics.Vector3(_player1.WorldPosition.X, _player1.WorldPosition.Y + 5, _player1.WorldPosition.Z), _camera).Y, 20, Color.BLACK);
 
-            Raylib.DrawText("seconds:"+ _time, Raylib.GetScreenWidth()/2 - Raylib.MeasureText("seconds:" + _time, 20)/2, 5, 20, Color.BLACK);
+            Raylib.DrawText("seconds:"+ (int)_seconds, Raylib.GetScreenWidth()/2 - Raylib.MeasureText("seconds:" + (int)_seconds, 20)/2, 5, 20, Color.BLACK);
             Raylib.DrawText("minutes:" + _minutes, Raylib.GetScreenWidth() / 2 - Raylib.MeasureText("minutes:" + _minutes, 20) / 2, 25, 20, Color.BLACK);
             if (ShowControls)
             {
