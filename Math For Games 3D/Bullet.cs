@@ -29,7 +29,7 @@ namespace MathForGames3D
 
             if (other is Collectible)
             {
-                other.LocalPosition = (Game.Random.Next(-10, 10),Game.Random.Next(1,3), Game.Random.Next(-10, 10));
+                other.LocalPosition = (Game.Random.Next(-50, 50),Game.Random.Next(1,5), Game.Random.Next(-50, 50));
                 for (int i = 0; i < collected.Length; i++)
                 {
                     if (collected[i].Children.Length < 1)

@@ -179,9 +179,13 @@ namespace MathForGames3D
             scene1.AddActor(_player1);
             scene1.AddActor(_target);
             scene2.AddActor(_player1);
-            int startingSceneIndex = 0;
-            startingSceneIndex = AddScene(scene1);
+
+            int startingSceneIndex = AddScene(scene1);
             AddScene(scene2);
+
+
+            //Sets the current scene to be the starting scene index
+            SetCurrentScene(startingSceneIndex);
         }
         private void Update(float deltaTime)
         {
@@ -202,6 +206,9 @@ namespace MathForGames3D
             
 
             _scenes[_currentSceneIndex].Update(deltaTime);
+
+            if (_minutes > 2)
+                _currentSceneIndex = 1;
         }
         private void Draw()
         {
