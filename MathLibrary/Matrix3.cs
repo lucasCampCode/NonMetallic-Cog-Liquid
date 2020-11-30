@@ -26,6 +26,13 @@ namespace MathLibrary
             this.m21 = m10; this.m22 = m11; this.m23 = m12;
             this.m31 = m20; this.m32 = m21; this.m33 = m22;
         }
+
+        /// <summary>
+        /// adds properties of one matrix with another
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
         public static Matrix3 operator +(Matrix3 left, Matrix3 right)
         {
             return new Matrix3
@@ -35,6 +42,12 @@ namespace MathLibrary
                     left.m21 + right.m31, left.m32 + right.m32, left.m33 + right.m33
                 );
         }
+        /// <summary>
+        /// subtracts properties of one matrix with another
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
         public static Matrix3 operator -(Matrix3 left, Matrix3 right)
         {
             return new Matrix3
@@ -44,6 +57,12 @@ namespace MathLibrary
                     left.m21 - right.m31, left.m32 - right.m32, left.m33 - right.m33
                 );
         }
+        /// <summary>
+        /// concatinates the properties of both matricies
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
         public static Matrix3 operator *(Matrix3 left, Matrix3 right)
         {
             return new Matrix3
@@ -61,38 +80,69 @@ namespace MathLibrary
                     left.m31 * right.m13 + left.m32 * right.m23 + left.m33 * right.m33
                 );
         }
+        /// <summary>
+        /// creates a new matrix3 with a rotation property
+        /// </summary>
+        /// <param name="radians"></param>
+        /// <returns></returns>
         public static Matrix3 CreateRotation(float radians)
         {
             return new Matrix3((float)Math.Cos(radians),(float)Math.Sin(radians),0,
                                -(float)Math.Sin(radians),(float)Math.Cos(radians),0,
                                0,0,1);
         }
-
+        /// <summary>
+        /// creates a new matrix3 with a translation property
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
         public static Matrix3 CreateTranslation(Vector2 position)
         {
             return new Matrix3(1,0,position.X,
                                0,1,position.Y,
                                0,0,1);
         }
+        /// <summary>
+        /// creates a new matrix3 with a translation property
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         public static Matrix3 CreateTranslation(float x,float y)
         {
             return new Matrix3(1, 0, x,
                                0, 1, y,
                                0, 0, 1);
         }
-        
+        /// <summary>
+        /// creates a new matrix3 with a scaled property
+        /// </summary>
+        /// <param name="scale"></param>
+        /// <returns></returns>
         public static Matrix3 CreateScale(Vector2 scale)
         {
             return new Matrix3(scale.X, 0, 0,
                                0, scale.Y, 0,
                                0, 0, 1);
         }
+        /// <summary>
+        /// creates a new matrix3 with a scaled property
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         public static Matrix3 CreateScale(float x,float y)
         {
             return new Matrix3(x,0,0,
                                0,y,0,
                                0,0,1);
         }
+        /// <summary>
+        /// concatinates a matrix3 with a vector3 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
         public static Vector3 operator *(Matrix3 left, Vector3 right)
         {
             return new Vector3

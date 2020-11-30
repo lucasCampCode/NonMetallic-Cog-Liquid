@@ -29,7 +29,12 @@ namespace MathLibrary
             this.m31 = m31; this.m32 = m32; this.m33 = m33; this.m34 = m34;
             this.m41 = m41; this.m42 = m42; this.m43 = m43; this.m44 = m44;
         }
-
+        /// <summary>
+        /// adds the properties of two matrix4 together
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
         public static Matrix4 operator +(Matrix4 lhs, Matrix4 rhs)
         {
             return new Matrix4
@@ -40,7 +45,12 @@ namespace MathLibrary
                     lhs.m41 + rhs.m41, lhs.m42 + rhs.m42, lhs.m43 + rhs.m43, lhs.m44 + rhs.m44
                 );
         }
-
+        /// <summary>
+        /// subtracts the properties of two matrix4 together
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
         public static Matrix4 operator -(Matrix4 lhs, Matrix4 rhs)
         {
             return new Matrix4
@@ -51,7 +61,12 @@ namespace MathLibrary
                     lhs.m41 - rhs.m41, lhs.m42 - rhs.m42, lhs.m43 - rhs.m43, lhs.m44 - rhs.m44
                 );
         }
-
+        /// <summary>
+        /// concatinates the properties of two matrix4
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
         public static Matrix4 operator *(Matrix4 lhs, Matrix4 rhs)
         {
             return new Matrix4
@@ -78,6 +93,11 @@ namespace MathLibrary
                     lhs.m41 * rhs.m14 + lhs.m42 * rhs.m24 + lhs.m43 * rhs.m34 + lhs.m44 * rhs.m44
                 );
         }
+        /// <summary>
+        /// creates a traslation matrix4 from a vector3
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
         public static Matrix4 CreateTraslation(Vector3 position)
         {
             return new Matrix4
@@ -88,6 +108,11 @@ namespace MathLibrary
                     0, 0, 0, 1
                 );
         }
+        /// <summary>
+        /// creates a scale matrix4 from a vector3
+        /// </summary>
+        /// <param name="scale"></param>
+        /// <returns></returns>
         public static Matrix4 CreateScale(Vector3 scale)
         {
             return new Matrix4
@@ -98,7 +123,11 @@ namespace MathLibrary
                     0, 0, 0, 1
                 );
         }
-
+        /// <summary>
+        /// create a rotation matrix4 on the x-axis from radians 
+        /// </summary>
+        /// <param name="radians"></param>
+        /// <returns></returns>
         public static Matrix4 CreateRotationX(float radians)
         {
             return new Matrix4
@@ -109,6 +138,11 @@ namespace MathLibrary
                     0,0,0,1
                 );
         }
+        /// <summary>
+        /// creates a rotation matrix4 on the y-axis from radians
+        /// </summary>
+        /// <param name="radians"></param>
+        /// <returns></returns>
         public static Matrix4 CreateRotationY(float radians)
         {
             return new Matrix4
@@ -119,6 +153,11 @@ namespace MathLibrary
                     0, 0, 0, 1
                 );
         }
+        /// <summary>
+        /// creates a rotation matrix4 on the z-axis from radians
+        /// </summary>
+        /// <param name="radians"></param>
+        /// <returns></returns>
         public static Matrix4 CreateRotationZ(float radians)
         {
             return new Matrix4
@@ -130,6 +169,12 @@ namespace MathLibrary
 
                 );
         }
+        /// <summary>
+        /// concatinates the properties of a matrix4 and a vector4
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
         public static Vector4 operator *(Matrix4 left,Vector4 right)
         {
             return new Vector4

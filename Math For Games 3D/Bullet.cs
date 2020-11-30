@@ -23,17 +23,24 @@ namespace MathForGames3D
         {
             _player = holder;
         }
+        /// <summary>
+        /// what the bullet does when it collides with another actor
+        /// </summary>
+        /// <param name="other"></param>
         public override void OnCollision(Actor other)
         {
             Actor[] collected = _player.Rotations;
 
             if (other is Collectible)
             {
+                //relocates the actor hit
                 other.LocalPosition = (Game.Random.Next(-50, 50),Game.Random.Next(1,5), Game.Random.Next(-50, 50));
                 for (int i = 0; i < collected.Length; i++)
                 {
+                    // if player has child has more than one child on rotation then go to next one
                     if (collected[i].Children.Length < 1)
                     {
+                        //addes a new cube to player on a new rotation actor
                         _player.CubesCollected += 1;
                         _player.AddObjectToPlayer(i,other);
                         break;
@@ -47,10 +54,11 @@ namespace MathForGames3D
 
         public override void Update(float deltaTime)
         {
-            if (WorldPosition.X < -100 || WorldPosition.X > 100
-                || WorldPosition.Y < 0 || WorldPosition.Y > 100)
+            //if the bullet hits the ground or goes to far it gets destroy
+            if (WorldPosition.X < -51 || WorldPosition.X > 51
+                || WorldPosition.Y < 0 || WorldPosition.Y > 51)
                 Destroy();
-
+            //applies gravity to any nonGrounded actors
             if (!OnGround())
                 Velocity += _gravity;
 

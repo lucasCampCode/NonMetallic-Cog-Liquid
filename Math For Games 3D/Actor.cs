@@ -17,11 +17,13 @@ namespace MathForGames3D
     }
     class Actor
     {
+        //loads models from generated mesh
         private Model _cube = Raylib.LoadModelFromMesh(Raylib.GenMeshCube(1, 1, 1));
         private Model _cylinder = Raylib.LoadModelFromMesh(Raylib.GenMeshCylinder(2, 4, 10));
-        private Model _tankBody = Raylib.LoadModelFromMesh(Raylib.GenMeshCube(4, 1, 3));
+        private Model _tankBody = Raylib.LoadModelFromMesh(Raylib.GenMeshCube(3, 1, 4));
         private Model _tires = Raylib.LoadModelFromMesh(Raylib.GenMeshCylinder(0.5f, 1, 6));
         private Model _null = Raylib.LoadModelFromMesh(Raylib.GenMeshPlane(.5f, .5f, 1, 1));
+
         protected char _icon = ' ';
         protected float _collisionRadius;
         private float _maxSpeed = 40;
@@ -42,7 +44,7 @@ namespace MathForGames3D
         public Actor Parent { get; private set; }
         public Vector3 Forward
         {
-            get { return new Vector3(_globalTransform.m11, _globalTransform.m21,_globalTransform.m31); }
+            get { return new Vector3(_globalTransform.m13, _globalTransform.m23,_globalTransform.m33); }
         }
 
         public Vector3 WorldPosition
@@ -280,17 +282,21 @@ namespace MathForGames3D
         }
         public virtual void Update(float deltaTime)
         {
-            //Increase position by the current velocity
             UpdateShape();
             UpdateTransform();
             UpdateGlobalTransform();
-                Velocity += Acceleration;
+            //Increase position by the current velocity
+            Velocity += Acceleration;
 
+            //caps the speed of all actors
             if (Velocity.Magnitude > _maxSpeed)
                 Velocity = Velocity.Normalized * _maxSpeed;
 
             LocalPosition += _velocity * deltaTime;
         }
+        /// <summary>
+        /// updates the models of the shape chosen by the actor
+        /// </summary>
         public void UpdateShape()
         {
             switch (_shape)
@@ -331,6 +337,7 @@ namespace MathForGames3D
                     break;
             }
         }
+        //draws a new shape for what the actor needs
         public void DrawShape()
         {
             switch (_shape)

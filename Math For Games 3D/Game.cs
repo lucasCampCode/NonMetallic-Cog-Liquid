@@ -40,7 +40,10 @@ namespace MathForGames3D
 
             return _scenes[index];
         }
-
+        /// <summary>
+        /// gets the current scene in game
+        /// </summary>
+        /// <returns></returns>
         public static Scene GetCurrentScene()
         {
             return _scenes[_currentSceneIndex];
@@ -163,6 +166,7 @@ namespace MathForGames3D
 
         private void Start()
         {
+            //initilization of the raylib window
             Raylib.InitWindow(1600, 900, "Math For Games");
             Raylib.SetTargetFPS(60);
             _camera.position = new System.Numerics.Vector3(0.0f, 20.0f, 20.0f);
@@ -171,44 +175,50 @@ namespace MathForGames3D
             _camera.fovy = 45.0f;
             _camera.type = CameraType.CAMERA_PERSPECTIVE;
 
-            _target = new Collectible(10, 1, 0, Color.BROWN, Shape.CUBE, 1);
 
+            //initilization of the actors in game
+            _target = new Collectible(10, 1, 0, Color.BROWN, Shape.CUBE, 1);
             _player1 = new Player((0, 0, 0), Color.BEIGE, Shape.NULL, 4);
             _player1.Speed = 5;
 
+            //adds player and target to the playable scenes
             scene1.AddActor(_player1);
             scene1.AddActor(_target);
             scene2.AddActor(_player1);
 
+            //add scenes to game 
             int startingSceneIndex = AddScene(scene1);
             AddScene(scene2);
-
 
             //Sets the current scene to be the starting scene index
             SetCurrentScene(startingSceneIndex);
         }
         private void Update(float deltaTime)
         {
-
-            _seconds += 1 * deltaTime;
-
+            //timer for the players
+            _seconds += deltaTime;
+            //resets seconds and transfers to minutes
             if (_seconds > 60)
             {
                 _minutes += 1;
                 _seconds = 0;
             }
-
+            //move camera along with the player
             _camera.position = new System.Numerics.Vector3(_player1.WorldPosition.X, _player1.WorldPosition.Y + 20.0f, _player1.WorldPosition.Z + 20.0f);
             _camera.target = new System.Numerics.Vector3(_player1.WorldPosition.X, _player1.WorldPosition.Y, _player1.WorldPosition.Z);
 
             if (!_scenes[_currentSceneIndex].Started)
                 _scenes[_currentSceneIndex].Start();
-            
 
             _scenes[_currentSceneIndex].Update(deltaTime);
 
-            if (_minutes > 2)
+            //when game reaches a certain time switches the game to the end screen
+            if (_minutes >= 4)
+            {
                 _currentSceneIndex = 1;
+                _minutes = 4;
+                _seconds = 0;
+            }
         }
         private void Draw()
         {
@@ -217,16 +227,22 @@ namespace MathForGames3D
             Raylib.BeginMode3D(_camera);
 
             Raylib.ClearBackground(Color.DARKGRAY);
+            //draws whatever is in scene
             _scenes[_currentSceneIndex].Draw();
+            //draws the ground and walls
             Raylib.DrawGrid(100, 1);
             Raylib.DrawPlane(new System.Numerics.Vector3(0, 0, 0), new System.Numerics.Vector2(100,100), Raylib.Fade(Color.GRAY, 0.75f));
-
+            Raylib.DrawCube(new System.Numerics.Vector3(50.5f, 2.5f, 0), 1, 5, 102, Raylib.Fade(Color.GRAY, 0.5f));
+            Raylib.DrawCube(new System.Numerics.Vector3(-50.5f, 2.5f, 0), 1, 5, 102, Raylib.Fade(Color.GRAY, 0.5f));
+            Raylib.DrawCube(new System.Numerics.Vector3(0, 2.5f, 50.5f), 102, 5, 1, Raylib.Fade(Color.GRAY, 0.5f));
+            Raylib.DrawCube(new System.Numerics.Vector3(0, 2.5f, -50.5f), 102, 5, 1, Raylib.Fade(Color.GRAY, 0.5f));
             Raylib.EndMode3D();
 
             Raylib.DrawText("Cubes collected: " + _player1.CubesCollected, (int)Raylib.GetWorldToScreen(new System.Numerics.Vector3(_player1.WorldPosition.X, _player1.WorldPosition.Y + 5, _player1.WorldPosition.Z), _camera).X - Raylib.MeasureText("Cubes collected: " + _player1.CubesCollected, 20) / 2, (int)Raylib.GetWorldToScreen(new System.Numerics.Vector3(_player1.WorldPosition.X, _player1.WorldPosition.Y + 5, _player1.WorldPosition.Z), _camera).Y, 20, Color.BLACK);
-
+            //draws timer for player refrence
             Raylib.DrawText("seconds:"+ (int)_seconds, Raylib.GetScreenWidth()/2 - Raylib.MeasureText("seconds:" + (int)_seconds, 20)/2, 5, 20, Color.BLACK);
             Raylib.DrawText("minutes:" + _minutes, Raylib.GetScreenWidth() / 2 - Raylib.MeasureText("minutes:" + _minutes, 20) / 2, 25, 20, Color.BLACK);
+            //draws debug controls
             if (ShowControls)
             {
                 Raylib.DrawText("press F1 to not show controls", Raylib.GetScreenWidth() - Raylib.MeasureText("press F1 to not show controls", 20), 5, 20, Color.BLACK);
@@ -249,12 +265,14 @@ namespace MathForGames3D
             }
             else
                 Raylib.DrawText("press F1 to show controls", Raylib.GetScreenWidth() - Raylib.MeasureText("press F1 to show controls", 20), 5, 20, Color.BLACK);
+            //draw debug for collision shperes
             if (Debug)
             {
                 Raylib.DrawText("press F2 to not show collisionSpheres", Raylib.GetScreenWidth() - Raylib.MeasureText("press F3 to not show collisionSpheres", 20), 25, 20, Color.BLACK);
             }
             else
                 Raylib.DrawText("press F2 to show collisionSpheres", Raylib.GetScreenWidth() - Raylib.MeasureText("press F3 to show collisionSpheres", 20), 25, 20, Color.BLACK);
+            //draws player info
             if (PlayerInfo)
             {
                 Raylib.DrawText("press F3 to not show Player Info", Raylib.GetScreenWidth() - Raylib.MeasureText("press F3 to not show Player Info", 20), 45, 20, Color.BLACK);

@@ -106,12 +106,16 @@ namespace MathForGames3D
         {
             Started = true;
         }
+        /// <summary>
+        /// checks the collisions bettween actors
+        /// </summary>
         public virtual void CheckCollision()
         {
             for (int i = 0; i < _actors.Length; i++)
             {
                 for (int j = 0; j < _actors.Length; j++)
                 {
+                    //breaks the objects is out of bounds error
                     if (i >= _actors.Length)
                         break;
 

@@ -11,14 +11,14 @@ namespace MathForGames3D
         private float _speed = 1;
         private int _cubesCollected;
         private float _bulletSpeed = 10;
-        private float _turretRotationZ = 0;
+        private float _turretRotationX = 0;
         private float _turretRotationY = 0;
         private Actor _tankBody;
         private Actor _tempActor;
         private Actor[] _rotations = new Actor[100];
         private Actor[] _leftTankTreads;
         private Actor[] _rightTankTreads;
-        private Actor _turretZ;
+        private Actor _turretX;
         private Actor _turretY;
         private Actor _barrel;
         private Actor _supressor;
@@ -72,7 +72,7 @@ namespace MathForGames3D
         {
             Bullet bullet = new Bullet(_supressor.WorldPosition.X, _supressor.WorldPosition.Y, _supressor.WorldPosition.Z, Color.WHITE,Shape.SHPERE, 0.2f,this);
             Game.GetCurrentScene().AddActor(bullet);
-            bullet.Velocity = _turretZ.Forward * (_bulletSpeed + (Speed/2));
+            bullet.Velocity = _turretX.Forward * (_bulletSpeed + (Speed/2));
         }
         public override void OnCollision(Actor other)
         {
@@ -98,14 +98,15 @@ namespace MathForGames3D
             for(int i = 0; i < _leftTankTreads.Length; i++)
             {
                 if (i == 0)
-                    _leftTankTreads[i] = new Actor(-2 + additive, 0, -1.25f, Color.DARKGREEN, Shape.TIRES, 0);
+                    _leftTankTreads[i] = new Actor(-1.25f, 0, -2 + additive, Color.DARKGREEN, Shape.TIRES, 0);
                 else if (i == _leftTankTreads.Length - 1)
-                    _leftTankTreads[i] = new Actor(-2 + additive, 0, -1.25f, Color.DARKGREEN, Shape.TIRES, 0);
+                    _leftTankTreads[i] = new Actor(-1.25f, 0, -2 + additive, Color.DARKGREEN, Shape.TIRES, 0);
                 else
-                    _leftTankTreads[i] = new Actor(-2 + additive, -0.5f, -1.25f, Color.DARKGREEN, Shape.TIRES, 0);
+                    _leftTankTreads[i] = new Actor(-1.25f, -0.5f, -2 + additive, Color.DARKGREEN, Shape.TIRES, 0);
                 additive += 1;
 
-                _leftTankTreads[i].SetRotationX((float)Math.PI / 2);
+                //rotates each tire to look connected to the tankBody
+                _leftTankTreads[i].SetRotationZ(-(float)Math.PI / 2);
                 _tankBody.AddChild(_leftTankTreads[i]);
             }
 
@@ -114,20 +115,21 @@ namespace MathForGames3D
             for (int i = 0; i < _rightTankTreads.Length; i++)
             {
                 if (i == 0)
-                    _rightTankTreads[i] = new Actor(-2 + additive, 0, 1.25f, Color.DARKGREEN, Shape.TIRES, 0);
+                    _rightTankTreads[i] = new Actor(1.25f, 0, -2 + additive, Color.DARKGREEN, Shape.TIRES, 0);
                 else if (i == _rightTankTreads.Length - 1)
-                    _rightTankTreads[i] = new Actor(-2 + additive, 0, 1.25f, Color.DARKGREEN, Shape.TIRES, 0);
+                    _rightTankTreads[i] = new Actor(1.25f, 0, -2 + additive, Color.DARKGREEN, Shape.TIRES, 0);
                 else
-                    _rightTankTreads[i] = new Actor(-2 + additive, -0.5f, 1.25f, Color.DARKGREEN, Shape.TIRES, 0);
+                    _rightTankTreads[i] = new Actor(1.25f, -0.5f, -2 + additive, Color.DARKGREEN, Shape.TIRES, 0);
                 additive += 1;
 
-                _rightTankTreads[i].SetRotationX(-(float)Math.PI / 2);
+                //rotates each tire to look connected to the tankBody
+                _rightTankTreads[i].SetRotationZ((float)Math.PI / 2);
                 _tankBody.AddChild(_rightTankTreads[i]);
             }
 
+            //initilize individual cube rotation paths
             for(int i = 0; i < _rotations.Length; i++)
             {
-                
                 _rotations[i] = new Actor(0,0,0,0);
 
                 _rotations[i].Rotate(Game.Random.Next(-6,6),0,Game.Random.Next(-6,6));
@@ -135,23 +137,24 @@ namespace MathForGames3D
                 AddChild(_rotations[i]);
             }
 
-            _turretZ = new Actor(0, 2, 0, Raylib.Fade(Color.BLUE, 0.5f),Shape.NULL, 0);
+            //initilize turrent 
+            _turretX = new Actor(0, 2, 0, Raylib.Fade(Color.BLUE, 0.5f),Shape.NULL, 0);
             _turretY = new Actor(0, 0, 0, Color.GREEN, Shape.CYLINDER, 0);
-            _barrel = new Actor(.5f,0,0,Raylib.Fade(Color.GREEN,0.75f),Shape.CYLINDER,0);
-            _supressor = new Actor(5,0,0,Color.GREEN,Shape.CUBE,0);
+            _barrel = new Actor(0,0,.5f,Raylib.Fade(Color.GREEN,0.75f),Shape.CYLINDER,0);
+            _supressor = new Actor(0, 0, 5, Color.GREEN, Shape.CUBE, 0);
 
-            _barrel.SetRotationZ((float)Math.PI / 2);
+            //changes to make it look right
+            _barrel.SetRotationX(-(float)Math.PI / 2);
             _turretY.SetScale((0.5f,0.25f,0.5f));
             _barrel.SetScale((.5f,1,.5f));
             _supressor.SetScale((2, 2, 2));
-            
 
-
+            //connects the turret to the tank
             AddChild(_tankBody);
             _tankBody.AddChild(_turretY);
-            _turretY.AddChild(_turretZ);
-            _turretZ.AddChild(_barrel);
-            _turretZ.AddChild(_supressor);
+            _turretY.AddChild(_turretX);
+            _turretX.AddChild(_barrel);
+            _turretX.AddChild(_supressor);
 
         }
 
@@ -170,7 +173,7 @@ namespace MathForGames3D
                     _rotations[i].Children[j].Update(deltaTime);
                 
             }
-            _turretZ.Update(deltaTime);
+            _turretX.Update(deltaTime);
             _turretY.Update(deltaTime);
             _barrel.Update(deltaTime);
             _supressor.Update(deltaTime);
@@ -206,8 +209,8 @@ namespace MathForGames3D
                 + Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_D));
             int rotateTurretY = -Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_LEFT))
                 + Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_RIGHT));
-            int rotateTurretZ = -Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_UP))
-                + Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_DOWN));
+            int rotateTurretZ = Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_UP))
+                - Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_DOWN));
             int xDirection = Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_W))
                 + -Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_S));
 
@@ -239,32 +242,35 @@ namespace MathForGames3D
                 Speed = 5;
             else { Speed = 10; }
 
+            //summons a bullet to shoot after a set speed
             if (Game.GetKeyDown((int)KeyboardKey.KEY_SPACE))
                 _bulletSpeed += 1;
             else if (Raylib.IsKeyReleased(KeyboardKey.KEY_SPACE))
             {
                 Shoot();
+                //resets bullet speed so it doesn't get stuck at clamped value
                 _bulletSpeed = 10;
             }
             
-
+            // player rotates the turrent left and right
             if (rotateTurretY > 0)
                 _turretRotationY += 0.05f;
             else if (rotateTurretY < 0)
                 _turretRotationY -= 0.05f;
-
+            
+            //rotates the turrent up and down
             if (rotateTurretZ > 0)
-                _turretRotationZ += 0.1f;
+                _turretRotationX += 0.1f;
             else if (rotateTurretZ < 0)
-                _turretRotationZ -= 0.1f;
+                _turretRotationX -= 0.1f;
 
-
+            //rotates player and connecting parts
             if (rotatePlayer > 0)
             {
                 RotateY(0.1f);
 
                 for (int i = 0; i < _rotations.Length; i++)
-                    _rotations[i].RotateY(-0.1f);
+                    _rotations[i].RotateY(0.1f);
 
                 for (int i = 0; i < _leftTankTreads.Length; i++)
                     _leftTankTreads[i].RotateY(-0.2f);
@@ -276,31 +282,34 @@ namespace MathForGames3D
                 RotateY(-0.1f);
 
                 for (int i = 0; i < _rotations.Length; i++)
-                    _rotations[i].RotateY(0.05f);
+                    _rotations[i].RotateY(-0.05f);
 
                 for (int i = 0; i < _leftTankTreads.Length; i++)
                     _leftTankTreads[i].RotateY(0.2f);
                 for (int i = 0; i < _rightTankTreads.Length; i++)
                     _rightTankTreads[i].RotateY(0.2f);
             }
+
+            //animations for how the tank should move forward and backwards
             if (xDirection > 0)
-            {
-                for (int i = 0; i < _leftTankTreads.Length; i++)
-                    _leftTankTreads[i].RotateY(-0.2f);
-                for (int i = 0; i < _rightTankTreads.Length; i++)
-                    _rightTankTreads[i].RotateY(0.2f);
-            }
-            if (xDirection < 0)
             {
                 for (int i = 0; i < _leftTankTreads.Length; i++)
                     _leftTankTreads[i].RotateY(0.2f);
                 for (int i = 0; i < _rightTankTreads.Length; i++)
                     _rightTankTreads[i].RotateY(-0.2f);
             }
+            if (xDirection < 0)
+            {
+                for (int i = 0; i < _leftTankTreads.Length; i++)
+                    _leftTankTreads[i].RotateY(-0.2f);
+                for (int i = 0; i < _rightTankTreads.Length; i++)
+                    _rightTankTreads[i].RotateY(0.2f);
+            }
 
             if (!OnGround())
                 Velocity += _gravity;
 
+            //provides a seemingly random roations around player
             for (int i = 0; i < _rotations.Length; i++)
             {
                 if (i % 5 == 0)
@@ -315,16 +324,18 @@ namespace MathForGames3D
                     _rotations[i].RotateY(0.075f);
 
             }
-            _turretRotationZ = Math.Clamp(_turretRotationZ, -(float)Math.PI / 2,0);
+            //clamps the movements of the turrent and bullet speed 
+            _turretRotationX = Math.Clamp(_turretRotationX, 0, (float)Math.PI / 2);
             _turretY.SetRotationY(_turretRotationY);
-            _turretZ.SetRotationZ(_turretRotationZ);
-            _bulletSpeed = Math.Clamp(_bulletSpeed, 10, 100);
+            _turretX.SetRotationX(_turretRotationX);
+            _bulletSpeed = Math.Clamp(_bulletSpeed, 10, 50);
             
             //Set the actors current velocity to be the a vector with the direction found scaled by the speed
             Velocity = Forward * xDirection;
             Velocity = Velocity.Normalized * Speed;
             //Acceleration = Forward * xDirection;
 
+            //keeps player inbounds of play area
             if (WorldPosition.X > 47)
                 Velocity.X = -1;
             else if (WorldPosition.X < -47)
@@ -333,6 +344,7 @@ namespace MathForGames3D
                 Velocity.Z = -1;
             else if (WorldPosition.Z < -47)
                 Velocity.Z = 1;
+
             base.Update(deltaTime);
             UpdateBody(deltaTime);
         }

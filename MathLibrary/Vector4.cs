@@ -149,7 +149,12 @@ namespace MathLibrary
         {
             return new Vector4(tuple.Item1, tuple.Item2, tuple.Item3,tuple.Item4);
         }
-
+        /// <summary>
+        /// returns teh cross product of the two vectors given
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
         public static Vector4 CrossProduct(Vector4 lhs, Vector4 rhs)
         {
             return new Vector4

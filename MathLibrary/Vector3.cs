@@ -100,7 +100,12 @@ namespace MathLibrary
 
             return (left.X * right.X) + (left.Y * right.Y) + (left.Z * right.Z);
         }
-
+        /// <summary>
+        /// returns teh cross product of the two vectors given
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
         public static Vector3 CrossProduct(Vector3 lhs,Vector3 rhs)
         {
             return new Vector3
