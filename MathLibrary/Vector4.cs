@@ -83,7 +83,7 @@ namespace MathLibrary
             _w = 0;
         }
 
-        public Vector4(float x, float y, float z,float w)
+        public Vector4(float x, float y, float z, float w)
         {
             _x = x;
             _y = y;
@@ -112,6 +112,22 @@ namespace MathLibrary
         public static float DotProduct(Vector4 left, Vector4 right)
         {
             return (left.X * right.X) + (left.Y * right.Y) + (left.Z * right.Z) + (left.W * right.W);
+        }
+        /// <summary>
+        /// returns teh cross product of the two vectors given
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
+        public static Vector4 CrossProduct(Vector4 lhs, Vector4 rhs)
+        {
+            return new Vector4
+                (
+                    lhs.Y * rhs.Z - lhs.Z * rhs.Y,
+                    lhs.Z * rhs.X - lhs.X * rhs.Z,
+                    lhs.X * rhs.Y - lhs.Y * rhs.X,
+                    0
+                );
         }
 
         public static Vector4 operator +(Vector4 left, Vector4 right)
@@ -145,25 +161,10 @@ namespace MathLibrary
         }
 
 
-        public static implicit operator Vector4((float, float, float,float) tuple)
+        public static implicit operator Vector4((float, float, float, float) tuple)
         {
-            return new Vector4(tuple.Item1, tuple.Item2, tuple.Item3,tuple.Item4);
+            return new Vector4(tuple.Item1, tuple.Item2, tuple.Item3, tuple.Item4);
         }
-        /// <summary>
-        /// returns teh cross product of the two vectors given
-        /// </summary>
-        /// <param name="lhs"></param>
-        /// <param name="rhs"></param>
-        /// <returns></returns>
-        public static Vector4 CrossProduct(Vector4 lhs, Vector4 rhs)
-        {
-            return new Vector4
-                (
-                    lhs.Y * rhs.Z - lhs.Z * rhs.Y,
-                    lhs.Z * rhs.X - lhs.X * rhs.Z,
-                    lhs.X * rhs.Y - lhs.Y * rhs.X,
-                    0
-                );
-        }
+
     }
 }

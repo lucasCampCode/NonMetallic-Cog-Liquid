@@ -27,7 +27,7 @@ namespace MathForGames3D
         protected char _icon = ' ';
         protected float _collisionRadius;
         private float _maxSpeed = 40;
-        protected Vector3 _gravity = new Vector3(0,-0.2f,0);
+        protected Vector3 _gravity = new Vector3(0, -0.2f, 0);
         private Vector3 _acceleration = new Vector3();
         private Vector3 _velocity = new Vector3();
         protected Matrix4 _localTransform = new Matrix4();
@@ -44,12 +44,12 @@ namespace MathForGames3D
         public Actor Parent { get; private set; }
         public Vector3 Forward
         {
-            get { return new Vector3(_globalTransform.m13, _globalTransform.m23,_globalTransform.m33); }
+            get { return new Vector3(_globalTransform.m13, _globalTransform.m23, _globalTransform.m33); }
         }
 
         public Vector3 WorldPosition
         {
-            get { return new Vector3(_globalTransform.m14, _globalTransform.m24,_globalTransform.m34); }
+            get { return new Vector3(_globalTransform.m14, _globalTransform.m24, _globalTransform.m34); }
         }
 
         public Vector3 LocalPosition
@@ -92,18 +92,18 @@ namespace MathForGames3D
 
         public Actor[] Children { get => _children; set => _children = value; }
         public Shape Shape { get => _shape; }
-        public Color RayColor { get => _rayColor;  }
+        public Color RayColor { get => _rayColor; }
 
 
         /// <param name="x">Position on the x axis</param>
         /// <param name="y">Position on the y axis</param>
         /// <param name="icon">The symbol that will appear when drawn</param>
         /// <param name="color">The color of the symbol that will appear when drawn</param>
-        public Actor(float x, float y,float z, float collisionRadius, char icon = ' ', ConsoleColor color = ConsoleColor.White)
+        public Actor(float x, float y, float z, float collisionRadius, char icon = ' ', ConsoleColor color = ConsoleColor.White)
         {
             _rayColor = Color.WHITE;
             _icon = icon;
-            LocalPosition = new Vector3(x, y,z);
+            LocalPosition = new Vector3(x, y, z);
             _velocity = new Vector3();
             _color = color;
             _collisionRadius = collisionRadius;
@@ -114,11 +114,16 @@ namespace MathForGames3D
         /// <param name="rayColor">The color of the symbol that will appear when drawn to raylib</param>
         /// <param name="icon">The symbol that will appear when drawn</param>
         /// <param name="color">The color of the symbol that will appear when drawn to the console</param>
-        public Actor(float x, float y,float z, Color rayColor, Shape shape, float collisionRadius, char icon = ' ', ConsoleColor color = ConsoleColor.White)
+        public Actor(float x, float y, float z, Color rayColor, Shape shape, float collisionRadius, char icon = ' ', ConsoleColor color = ConsoleColor.White)
             : this(x, y, z, collisionRadius, icon, color)
         {
             _rayColor = rayColor;
             _shape = shape;
+        }
+        public Actor(float x, float y, float z, Color rayColor, float collisionRadius, char icon = ' ', ConsoleColor color = ConsoleColor.White)
+            : this(x, y, z, collisionRadius, icon, color)
+        {
+            _rayColor = rayColor;
         }
 
         public void AddChild(Actor child)
@@ -192,61 +197,109 @@ namespace MathForGames3D
 
             return childRemoved;
         }
-
+        /// <summary>
+        /// set the posistion of the actor
+        /// </summary>
+        /// <param name="position"></param>
         public void SetTranslate(Vector3 position)
         {
             _translation = Matrix4.CreateTraslation(position);
         }
+        /// <summary>
+        /// set the x-axis of rotation of an actor
+        /// </summary>
+        /// <param name="radians"></param>
         public void SetRotationX(float radians)
         {
             _rotation = Matrix4.CreateRotationX(radians);
         }
+        /// <summary>
+        /// set the y-axis of rotation of an actor
+        /// </summary>
+        /// <param name="radians"></param>
         public void SetRotationY(float radians)
         {
             _rotation = Matrix4.CreateRotationY(radians);
         }
+        /// <summary>
+        /// set the xZ-axis of rotation of an actor
+        /// </summary>
+        /// <param name="radians"></param>
         public void SetRotationZ(float radians)
         {
             _rotation = Matrix4.CreateRotationZ(radians);
         }
-        public void Rotate(float radiansX,float radiansY,float radiansZ)
+        /// <summary>
+        /// rotates actor using all axis
+        /// </summary>
+        /// <param name="radiansX"></param>
+        /// <param name="radiansY"></param>
+        /// <param name="radiansZ"></param>
+        public void RotateXYZ(float radiansX, float radiansY, float radiansZ)
         {
-            _rotation = _rotation * (Matrix4.CreateRotationX(radiansX) * Matrix4.CreateRotationY(radiansY) * Matrix4.CreateRotationZ(radiansZ)); 
+            _rotation *= (Matrix4.CreateRotationX(radiansX) * Matrix4.CreateRotationY(radiansY) * Matrix4.CreateRotationZ(radiansZ));
         }
+        /// <summary>
+        /// rotates the actor of the X-axis
+        /// </summary>
+        /// <param name="radians"></param>
         public void RotateX(float radians)
         {
             _rotation *= Matrix4.CreateRotationX(radians);
         }
+        /// <summary>
+        /// rotates the Actor of the Y-axis
+        /// </summary>
+        /// <param name="radians"></param>
         public void RotateY(float radians)
         {
             _rotation *= Matrix4.CreateRotationY(radians);
         }
+        /// <summary>
+        /// rotates the Actor of the Z-axis
+        /// </summary>
+        /// <param name="radians"></param>
         public void RotateZ(float radians)
         {
             _rotation *= Matrix4.CreateRotationZ(radians);
         }
-        
+        /// <summary>
+        /// set the scale of the Actor
+        /// </summary>
+        /// <param name="scale"></param>
         public void SetScale(Vector3 scale)
         {
             _scale = Matrix4.CreateScale(scale);
         }
-
+        /// <summary>
+        /// checks to see if the distance of two actors are greater than each collision radius
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public virtual bool CheckCollision(Actor other)
         {
 
             float distance = (other.WorldPosition - WorldPosition).Magnitude;
             return distance <= _collisionRadius + other._collisionRadius;
         }
+        /// <summary>
+        /// Actor base collision 
+        /// </summary>
+        /// <param name="other"></param>
         public virtual void OnCollision(Actor other)
         {
 
         }
-
+        /// <summary>
+        /// updates the local transform with the concatinations of translation, rotation, and scale
+        /// </summary>
         private void UpdateTransform()
         {
             _localTransform = _translation * _rotation * _scale;
         }
-        
+        /// <summary>
+        /// updates the gloabal transform with a concatination of parent or world with the local transform
+        /// </summary>
         public void UpdateGlobalTransform()
         {
             if (Parent != null)
@@ -259,7 +312,10 @@ namespace MathForGames3D
                 Children[i].UpdateGlobalTransform();
             }
         }
-
+        /// <summary>
+        /// checks to see if an actor hit ground level
+        /// </summary>
+        /// <returns></returns>
         public bool OnGround()
         {
             if (WorldPosition.Y <= Game.GetCurrentScene().World.m24)
@@ -267,7 +323,9 @@ namespace MathForGames3D
 
             return false;
         }
-
+        /// <summary>
+        /// destroys the current actor
+        /// </summary>
         public void Destroy()
         {
             Game.GetCurrentScene().RemoveActor(this);
@@ -337,16 +395,18 @@ namespace MathForGames3D
                     break;
             }
         }
-        //draws a new shape for what the actor needs
+        /// <summary>
+        /// draws a new shape for what the actor needs
+        /// </summary>
         public void DrawShape()
         {
             switch (_shape)
             {
                 case Shape.SHPERE:
-                    Raylib.DrawSphere(new System.Numerics.Vector3(WorldPosition.X, WorldPosition.Y, WorldPosition.Z), _collisionRadius, Raylib.Fade(_rayColor,50));
+                    Raylib.DrawSphere(new System.Numerics.Vector3(WorldPosition.X, WorldPosition.Y, WorldPosition.Z), _collisionRadius, Raylib.Fade(_rayColor, 50));
                     break;
                 case Shape.CUBE:
-                    Raylib.DrawModel(_cube, new System.Numerics.Vector3(0,0,0), 1.0f, _rayColor);
+                    Raylib.DrawModel(_cube, new System.Numerics.Vector3(0, 0, 0), 1.0f, _rayColor);
                     break;
                 case Shape.CYLINDER:
                     Raylib.DrawModel(_cylinder, new System.Numerics.Vector3(0, 0, 0), 1.0f, _rayColor);
@@ -379,7 +439,7 @@ namespace MathForGames3D
             {
                 Raylib.DrawSphere(new System.Numerics.Vector3(WorldPosition.X, WorldPosition.Y, WorldPosition.Z), _collisionRadius, Raylib.Fade(Color.BLUE, 0.5f));
                 Raylib.DrawLine3D(new System.Numerics.Vector3(WorldPosition.X, WorldPosition.Y, WorldPosition.Z),
-                                  new System.Numerics.Vector3(WorldPosition.X + (Forward.X*5) , WorldPosition.Y + (Forward.Y *5), WorldPosition.Z + (Forward.Z*5)),
+                                  new System.Numerics.Vector3(WorldPosition.X + (Forward.X * 5), WorldPosition.Y + (Forward.Y * 5), WorldPosition.Z + (Forward.Z * 5)),
                                   Color.PURPLE);
             }
         }

@@ -5,22 +5,16 @@ using Raylib_cs;
 
 namespace MathForGames3D
 {
-    class Collectible: Actor
+    class Collectible : Actor
     {
-        
+
         public Collectible(float x, float y, float z, Color rayColor, Shape shape, float collisionRadius) : base(x, y, z, rayColor, shape, collisionRadius)
         {
-            Rotate((float)Math.PI/4,0, (float)Math.PI / 4);
-        }
-        public override void OnCollision(Actor other)
-        {
-            if (other is Bullet)
-
-            base.OnCollision(other);
+            RotateXYZ((float)Math.PI / 4, 0, (float)Math.PI / 4);
         }
         public override void Update(float deltaTime)
         {
-            RotateY(0.1f);
+            RotateXYZ(0,0.1f,0);
             base.Update(deltaTime);
         }
     }

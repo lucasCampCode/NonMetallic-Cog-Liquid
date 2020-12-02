@@ -16,8 +16,8 @@ namespace MathForGames3D
         private static bool _showControls = false;
         private static bool _playerInfo = false;
         private static Scene[] _scenes;
-        public Scene scene1 = new Scene();
-        private Scene scene2 = new Scene();
+        private Scene _scene1 = new Scene();
+        private Scene _scene2 = new Scene();
         private Collectible _target;
         private Player _player1;
         private Camera3D _camera = new Camera3D();
@@ -178,17 +178,17 @@ namespace MathForGames3D
 
             //initilization of the actors in game
             _target = new Collectible(10, 1, 0, Color.BROWN, Shape.CUBE, 1);
-            _player1 = new Player((0, 0, 0), Color.BEIGE, Shape.NULL, 4);
+            _player1 = new Player(0, 0, 0, 4);
             _player1.Speed = 5;
 
             //adds player and target to the playable scenes
-            scene1.AddActor(_player1);
-            scene1.AddActor(_target);
-            scene2.AddActor(_player1);
+            _scene1.AddActor(_player1);
+            _scene1.AddActor(_target);
+            _scene2.AddActor(_player1);
 
             //add scenes to game 
-            int startingSceneIndex = AddScene(scene1);
-            AddScene(scene2);
+            int startingSceneIndex = AddScene(_scene1);
+            AddScene(_scene2);
 
             //Sets the current scene to be the starting scene index
             SetCurrentScene(startingSceneIndex);
@@ -231,7 +231,7 @@ namespace MathForGames3D
             _scenes[_currentSceneIndex].Draw();
             //draws the ground and walls
             Raylib.DrawGrid(100, 1);
-            Raylib.DrawPlane(new System.Numerics.Vector3(0, 0, 0), new System.Numerics.Vector2(100,100), Raylib.Fade(Color.GRAY, 0.75f));
+            Raylib.DrawPlane(new System.Numerics.Vector3(0, 0, 0), new System.Numerics.Vector2(100, 100), Raylib.Fade(Color.GRAY, 0.75f));
             Raylib.DrawCube(new System.Numerics.Vector3(50.5f, 2.5f, 0), 1, 5, 102, Raylib.Fade(Color.GRAY, 0.5f));
             Raylib.DrawCube(new System.Numerics.Vector3(-50.5f, 2.5f, 0), 1, 5, 102, Raylib.Fade(Color.GRAY, 0.5f));
             Raylib.DrawCube(new System.Numerics.Vector3(0, 2.5f, 50.5f), 102, 5, 1, Raylib.Fade(Color.GRAY, 0.5f));
@@ -240,7 +240,7 @@ namespace MathForGames3D
 
             Raylib.DrawText("Cubes collected: " + _player1.CubesCollected, (int)Raylib.GetWorldToScreen(new System.Numerics.Vector3(_player1.WorldPosition.X, _player1.WorldPosition.Y + 5, _player1.WorldPosition.Z), _camera).X - Raylib.MeasureText("Cubes collected: " + _player1.CubesCollected, 20) / 2, (int)Raylib.GetWorldToScreen(new System.Numerics.Vector3(_player1.WorldPosition.X, _player1.WorldPosition.Y + 5, _player1.WorldPosition.Z), _camera).Y, 20, Color.BLACK);
             //draws timer for player refrence
-            Raylib.DrawText("seconds:"+ (int)_seconds, Raylib.GetScreenWidth()/2 - Raylib.MeasureText("seconds:" + (int)_seconds, 20)/2, 5, 20, Color.BLACK);
+            Raylib.DrawText("seconds:" + (int)_seconds, Raylib.GetScreenWidth() / 2 - Raylib.MeasureText("seconds:" + (int)_seconds, 20) / 2, 5, 20, Color.BLACK);
             Raylib.DrawText("minutes:" + _minutes, Raylib.GetScreenWidth() / 2 - Raylib.MeasureText("minutes:" + _minutes, 20) / 2, 25, 20, Color.BLACK);
             //draws debug controls
             if (ShowControls)
@@ -276,7 +276,7 @@ namespace MathForGames3D
             if (PlayerInfo)
             {
                 Raylib.DrawText("press F3 to not show Player Info", Raylib.GetScreenWidth() - Raylib.MeasureText("press F3 to not show Player Info", 20), 45, 20, Color.BLACK);
-                
+
                 Raylib.DrawText("player position x:" + _player1.WorldPosition.X, 3, Raylib.GetScreenHeight() - 140, 20, Color.BLACK);
                 Raylib.DrawText("player position y:" + _player1.WorldPosition.Y, 3, Raylib.GetScreenHeight() - 120, 20, Color.BLACK);
                 Raylib.DrawText("player position z:" + _player1.WorldPosition.Z, 3, Raylib.GetScreenHeight() - 100, 20, Color.BLACK);
@@ -294,10 +294,6 @@ namespace MathForGames3D
         {
             if (_scenes[_currentSceneIndex].Started)
                 _scenes[_currentSceneIndex].End();
-        }
-        public void DebugGame()
-        {
-
         }
 
         public void Run()
