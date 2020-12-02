@@ -249,12 +249,12 @@ namespace MathForGames3D
             }
             else
             {
-                Raylib.DrawRectangle(0, 0, Raylib.GetScreenWidth(), Raylib.GetScreenHeight(), Raylib.Fade(Color.RED, 0.75f));
+                Raylib.DrawRectangle(0, 0, Raylib.GetScreenWidth(), Raylib.GetScreenHeight(), Raylib.Fade(Color.WHITE , 0.75f));
                 Raylib.DrawText("GameOver", Raylib.GetScreenWidth() / 2 - Raylib.MeasureText("GameOver",50) / 2, 100, 50, Color.BLACK);
                 Raylib.DrawText("you collected a total of " + _player1.CubesCollected +" cubes!", Raylib.GetScreenWidth() / 2 - Raylib.MeasureText("you collected a total of " + _player1.CubesCollected + " cubes!", 50) / 2, 150, 50, Color.BLACK);
                 Raylib.DrawText("press space to exit game", Raylib.GetScreenWidth() / 2 - Raylib.MeasureText("press space to exit game", 50) / 2, 200, 50, Color.BLACK);
-                if (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE))
-                    GameOver = true;
+                
+                    GameOver = Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE);
             }
             Raylib.EndDrawing();
         }

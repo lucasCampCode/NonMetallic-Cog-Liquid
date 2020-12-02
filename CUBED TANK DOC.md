@@ -113,6 +113,11 @@
 - visibility: public
   - main game loop
 
+#### DrawOptions(void)
+- return type: void
+- visibility: private
+  - draws the F1 - F3 options when the game is going
+
 ## Scene.cs
 
 ### properties
