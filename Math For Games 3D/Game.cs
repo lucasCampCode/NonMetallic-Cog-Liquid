@@ -188,7 +188,7 @@ namespace MathForGames3D
 
             //add scenes to game 
             int startingSceneIndex = AddScene(_scene1);
-            AddScene(_scene2);
+             AddScene(_scene2);
 
             //Sets the current scene to be the starting scene index
             SetCurrentScene(startingSceneIndex);
@@ -238,10 +238,28 @@ namespace MathForGames3D
             Raylib.DrawCube(new System.Numerics.Vector3(0, 2.5f, -50.5f), 102, 5, 1, Raylib.Fade(Color.GRAY, 0.5f));
             Raylib.EndMode3D();
 
-            Raylib.DrawText("Cubes collected: " + _player1.CubesCollected, (int)Raylib.GetWorldToScreen(new System.Numerics.Vector3(_player1.WorldPosition.X, _player1.WorldPosition.Y + 5, _player1.WorldPosition.Z), _camera).X - Raylib.MeasureText("Cubes collected: " + _player1.CubesCollected, 20) / 2, (int)Raylib.GetWorldToScreen(new System.Numerics.Vector3(_player1.WorldPosition.X, _player1.WorldPosition.Y + 5, _player1.WorldPosition.Z), _camera).Y, 20, Color.BLACK);
-            //draws timer for player refrence
-            Raylib.DrawText("seconds:" + (int)_seconds, Raylib.GetScreenWidth() / 2 - Raylib.MeasureText("seconds:" + (int)_seconds, 20) / 2, 5, 20, Color.BLACK);
-            Raylib.DrawText("minutes:" + _minutes, Raylib.GetScreenWidth() / 2 - Raylib.MeasureText("minutes:" + _minutes, 20) / 2, 25, 20, Color.BLACK);
+            
+            if (CurrentSceneIndex != _scenes.Length - 1) 
+            {
+                Raylib.DrawText("Cubes collected: " + _player1.CubesCollected, (int)Raylib.GetWorldToScreen(new System.Numerics.Vector3(_player1.WorldPosition.X, _player1.WorldPosition.Y + 5, _player1.WorldPosition.Z), _camera).X - Raylib.MeasureText("Cubes collected: " + _player1.CubesCollected, 20) / 2, (int)Raylib.GetWorldToScreen(new System.Numerics.Vector3(_player1.WorldPosition.X, _player1.WorldPosition.Y + 5, _player1.WorldPosition.Z), _camera).Y, 20, Color.BLACK);
+                //draws timer for player refrence
+                Raylib.DrawText("seconds:" + (int)_seconds, Raylib.GetScreenWidth() / 2 - Raylib.MeasureText("seconds:" + (int)_seconds, 20) / 2, 5, 20, Color.BLACK);
+                Raylib.DrawText("minutes:" + _minutes, Raylib.GetScreenWidth() / 2 - Raylib.MeasureText("minutes:" + _minutes, 20) / 2, 25, 20, Color.BLACK);
+                DrawOptions(); 
+            }
+            else
+            {
+                Raylib.DrawRectangle(0, 0, Raylib.GetScreenWidth(), Raylib.GetScreenHeight(), Raylib.Fade(Color.RED, 0.75f));
+                Raylib.DrawText("GameOver", Raylib.GetScreenWidth() / 2 - Raylib.MeasureText("GameOver",50) / 2, 100, 50, Color.BLACK);
+                Raylib.DrawText("you collected a total of " + _player1.CubesCollected +" cubes!", Raylib.GetScreenWidth() / 2 - Raylib.MeasureText("you collected a total of " + _player1.CubesCollected + " cubes!", 50) / 2, 150, 50, Color.BLACK);
+                Raylib.DrawText("press space to exit game", Raylib.GetScreenWidth() / 2 - Raylib.MeasureText("press space to exit game", 50) / 2, 200, 50, Color.BLACK);
+                if (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE))
+                    GameOver = true;
+            }
+            Raylib.EndDrawing();
+        }
+        private void DrawOptions()
+        {
             //draws debug controls
             if (ShowControls)
             {
@@ -287,8 +305,6 @@ namespace MathForGames3D
             }
             else
                 Raylib.DrawText("press F3 to show Player Info", Raylib.GetScreenWidth() - Raylib.MeasureText("press F3 to show Player Info", 20), 45, 20, Color.BLACK);
-
-            Raylib.EndDrawing();
         }
         private void End()
         {

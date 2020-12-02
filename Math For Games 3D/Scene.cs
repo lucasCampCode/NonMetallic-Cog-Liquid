@@ -51,8 +51,11 @@ namespace MathForGames3D
                 //add the value into the old array and increment j
                 if (i != index)
                 {
-                    newArray[j] = _actors[i];
-                    j++;
+                    if (j < newArray.Length)
+                    {
+                        newArray[j] = _actors[i];
+                        j++;
+                    }
                 }
                 else
                 {
@@ -69,7 +72,7 @@ namespace MathForGames3D
         public bool RemoveActor(Actor actor)
         {
             //Check to see if the actor was null
-            if (actor == null)
+            if (actor == null || _actors.Length == 0)
             {
                 return false;
             }
@@ -84,8 +87,11 @@ namespace MathForGames3D
             {
                 if (actor != _actors[i])
                 {
-                    newArray[j] = _actors[i];
-                    j++;
+                    if (j < newArray.Length)
+                    {
+                        newArray[j] = _actors[i];
+                        j++;
+                    }
                 }
                 else
                 {

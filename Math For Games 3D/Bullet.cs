@@ -56,7 +56,8 @@ namespace MathForGames3D
         {
             //if the bullet hits the ground or goes to far it gets destroy
             if (WorldPosition.X < -51 || WorldPosition.X > 51
-                || WorldPosition.Y < 0 || WorldPosition.Y > 51)
+                || WorldPosition.Y < 0 || WorldPosition.Y > 51
+                || WorldPosition.Z < -51 || WorldPosition.Z > 51)
                 Destroy();
             //applies gravity to any nonGrounded actors
             if (!OnGround())

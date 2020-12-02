@@ -199,54 +199,61 @@ namespace MathForGames3D
         }
         public override void Update(float deltaTime)
         {
-            //Gets the player's input to determine which direction the actor will move in on each axis 
-            int rotatePlayer = -Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_A))
-                + Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_D));
-            int rotateTurretY = -Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_LEFT))
-                + Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_RIGHT));
-            int rotateTurretZ = Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_UP))
-                - Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_DOWN));
-            int xDirection = Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_W))
-                + -Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_S));
+            int rotatePlayer = 0;
+            int rotateTurretY = 0;
+            int rotateTurretZ = 0;
+            int xDirection = 0;
 
-            if (Raylib.IsKeyReleased(KeyboardKey.KEY_F1))
+            if (Game.CurrentSceneIndex == 0)
             {
-                if (Game.ShowControls)
-                    Game.ShowControls = false;
-                else
-                    Game.ShowControls = true;
-            }
-            if (Raylib.IsKeyReleased(KeyboardKey.KEY_F2))
-            {
-                if (Game.Debug)
-                    Game.Debug = false;
-                else
-                    Game.Debug = true;
-            }
-            if (Raylib.IsKeyReleased(KeyboardKey.KEY_F3))
-            {
-                if (Game.PlayerInfo)
-                    Game.PlayerInfo = false;
-                else
-                    Game.PlayerInfo = true;
-            }
+                //Gets the player's input to determine which direction the actor will move in on each axis 
+                rotatePlayer = -Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_A))
+                    + Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_D));
+                rotateTurretY = -Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_LEFT))
+                    + Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_RIGHT));
+                rotateTurretZ = Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_UP))
+                    - Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_DOWN));
+                xDirection = Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_W))
+                    + -Convert.ToInt32(Game.GetKeyDown((int)KeyboardKey.KEY_S));
 
-            if (Game.GetKeyDown((int)KeyboardKey.KEY_LEFT_CONTROL))
-                Speed = 20;
-            else if (Game.GetKeyDown((int)KeyboardKey.KEY_LEFT_SHIFT))
-                Speed = 5;
-            else { Speed = 10; }
+                if (Raylib.IsKeyReleased(KeyboardKey.KEY_F1))
+                {
+                    if (Game.ShowControls)
+                        Game.ShowControls = false;
+                    else
+                        Game.ShowControls = true;
+                }
+                if (Raylib.IsKeyReleased(KeyboardKey.KEY_F2))
+                {
+                    if (Game.Debug)
+                        Game.Debug = false;
+                    else
+                        Game.Debug = true;
+                }
+                if (Raylib.IsKeyReleased(KeyboardKey.KEY_F3))
+                {
+                    if (Game.PlayerInfo)
+                        Game.PlayerInfo = false;
+                    else
+                        Game.PlayerInfo = true;
+                }
 
-            //summons a bullet to shoot after a set speed
-            if (Game.GetKeyDown((int)KeyboardKey.KEY_SPACE))
-                _bulletSpeed += 1;
-            else if (Raylib.IsKeyReleased(KeyboardKey.KEY_SPACE))
-            {
-                Shoot();
-                //resets bullet speed so it doesn't get stuck at clamped value
-                _bulletSpeed = 10;
+                if (Game.GetKeyDown((int)KeyboardKey.KEY_LEFT_CONTROL))
+                    Speed = 20;
+                else if (Game.GetKeyDown((int)KeyboardKey.KEY_LEFT_SHIFT))
+                    Speed = 5;
+                else { Speed = 10; }
+
+                //summons a bullet to shoot after a set speed
+                if (Game.GetKeyDown((int)KeyboardKey.KEY_SPACE))
+                    _bulletSpeed += 1;
+                else if (Raylib.IsKeyReleased(KeyboardKey.KEY_SPACE))
+                {
+                    Shoot();
+                    //resets bullet speed so it doesn't get stuck at clamped value
+                    _bulletSpeed = 10;
+                }
             }
-
             // player rotates the turrent left and right
             if (rotateTurretY > 0)
                 _turretRotationY += 0.05f;
@@ -317,8 +324,8 @@ namespace MathForGames3D
                     _rotations[i].RotateY(0.035f);
                 else if (i % 5 == 4)
                     _rotations[i].RotateY(0.075f);
-
             }
+            
             //clamps the movements of the turrent and bullet speed 
             _turretRotationX = Math.Clamp(_turretRotationX, 0, (float)Math.PI / 2);
             _turretY.SetRotationY(_turretRotationY);
