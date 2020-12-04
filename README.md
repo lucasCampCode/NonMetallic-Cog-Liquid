@@ -1,5 +1,9 @@
 # CubedTank
 *requires keyboard
+## how to download game
+- going to the release page and download the MathForGames3D.zip file and run the .exe file
+- release: https://github.com/lucasCampCode/NonMetallic-Cog-Liquid/releases
+
 ## how to play
 - objective of the game is to collect as many cubes as possible with a time limit.
 - To collect the cubes all you have to do is shoot them!
