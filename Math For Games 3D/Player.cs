@@ -354,12 +354,6 @@ namespace MathForGames3D
         public override void Draw()
         {
             DrawBody();
-            Raylib.DrawLine3D
-                (
-                new System.Numerics.Vector3(WorldPosition.X, WorldPosition.Y, WorldPosition.Z),
-                new System.Numerics.Vector3(WorldPosition.X + (Forward.X * 5f), WorldPosition.Y + (Forward.Y * 5f), WorldPosition.Z + (Forward.Z * 5f)),
-                Color.GREEN
-                );
             Debug();
         }
     }

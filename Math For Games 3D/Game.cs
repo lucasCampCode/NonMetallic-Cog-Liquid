@@ -263,7 +263,6 @@ namespace MathForGames3D
             //draws debug controls
             if (ShowControls)
             {
-                Raylib.DrawText("press F1 to not show controls", Raylib.GetScreenWidth() - Raylib.MeasureText("press F1 to not show controls", 20), 5, 20, Color.BLACK);
                 Raylib.DrawText("w to move tank forward", 3, 5, 20, Color.BLACK);
                 Raylib.DrawText("s to move tank backwards", 3, 25, 20, Color.BLACK);
                 Raylib.DrawText("a to rotate tank left", 3, 45, 20, Color.BLACK);
@@ -281,19 +280,14 @@ namespace MathForGames3D
                 Raylib.DrawText("hold space to charge shot", 3, 205 + 30, 20, Color.BLACK);
                 Raylib.DrawText("realese space to shoot", 3, 225 + 30, 20, Color.BLACK);
             }
-            else
-                Raylib.DrawText("press F1 to show controls", Raylib.GetScreenWidth() - Raylib.MeasureText("press F1 to show controls", 20), 5, 20, Color.BLACK);
             //draw debug for collision shperes
             if (Debug)
             {
                 Raylib.DrawText("press F2 to not show collisionSpheres", Raylib.GetScreenWidth() - Raylib.MeasureText("press F3 to not show collisionSpheres", 20), 25, 20, Color.BLACK);
             }
-            else
-                Raylib.DrawText("press F2 to show collisionSpheres", Raylib.GetScreenWidth() - Raylib.MeasureText("press F3 to show collisionSpheres", 20), 25, 20, Color.BLACK);
             //draws player info
             if (PlayerInfo)
             {
-                Raylib.DrawText("press F3 to not show Player Info", Raylib.GetScreenWidth() - Raylib.MeasureText("press F3 to not show Player Info", 20), 45, 20, Color.BLACK);
 
                 Raylib.DrawText("player position x:" + _player1.WorldPosition.X, 3, Raylib.GetScreenHeight() - 140, 20, Color.BLACK);
                 Raylib.DrawText("player position y:" + _player1.WorldPosition.Y, 3, Raylib.GetScreenHeight() - 120, 20, Color.BLACK);
@@ -303,8 +297,6 @@ namespace MathForGames3D
                 Raylib.DrawText("collectible position x:" + _target.WorldPosition.Z, 3, Raylib.GetScreenHeight() - 40, 20, Color.BLACK);
                 Raylib.DrawText("bullets launch speed:" + _player1.BulletSpeed, 3, Raylib.GetScreenHeight() - 20, 20, Color.BLACK);
             }
-            else
-                Raylib.DrawText("press F3 to show Player Info", Raylib.GetScreenWidth() - Raylib.MeasureText("press F3 to show Player Info", 20), 45, 20, Color.BLACK);
         }
         private void End()
         {
